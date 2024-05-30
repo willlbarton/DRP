@@ -32,10 +32,13 @@ cloud_vm_deploy:
       if systemctl --user is-active simplewebapp
         then systemctl --user stop simplewebapp
       fi
+      echo "Running 'mvn package'.\n"
       mvn package
       chmod +x target/bin/simplewebapp
       cat simplewebapp.service > ~/.config/systemd/user/simplewebapp.service
       printf "\nExecStart=$PWD/target/bin/simplewebapp" >> ~/.config/systemd/user/simplewebapp.service
+      echo "Copied to ~/.config/systemd/user/simplewebapp.service\n"
+      cat ~/.config/systemd/user/simplewebapp.service >> echo
       systemctl --user daemon-reload
       systemctl --user start simplewebapp
   environment: staging
