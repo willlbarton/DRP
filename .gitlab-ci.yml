@@ -36,12 +36,15 @@ cloud_vm_deploy:
       mvn package
       chmod +x target/bin/simplewebapp
       echo "About to copy tto ~/.config/systemd/user/simplewebapp.service"
-      ls >> echo
+      ls | echo
       cat simplewebapp.service > ~/.config/systemd/user/simplewebapp.service
       echo "Copied base simplewebapp.service file."
+      mkdir ~/.config
+      mkdir ~/.config/systemd
+      mkdir ~/.config/systemd/user/
       printf "\nExecStart=$PWD/target/bin/simplewebapp" >> ~/.config/systemd/user/simplewebapp.service
       echo "Copied ExecStart field to to ~/.config/systemd/user/simplewebapp.service"
-      cat ~/.config/systemd/user/simplewebapp.service >> echo
+      cat ~/.config/systemd/user/simplewebapp.service | echo
       systemctl --user daemon-reload
       systemctl --user start simplewebapp
   environment: staging
