@@ -48,5 +48,5 @@ heroku_deploy:
     - job: compile
       artifacts: true
   script:
-    - dpl --provider=heroku --app=dk2722-simplewebapp --api-key=$heroku_api_key
+    - dpl --provider=heroku --app=tm1722-tax-exemption-tool --api-key=$heroku_api_key
   environment: production
