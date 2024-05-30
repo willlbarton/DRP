@@ -39,3 +39,14 @@ cloud_vm_deploy:
       systemctl --user daemon-reload
       systemctl --user start simplewebapp
   environment: staging
+
+heroku_deploy:
+  stage: deploy
+  needs:
+    - job: test
+      artifacts: true
+    - job: compile
+      artifacts: true
+  script:
+    - dpl --provider=heroku --app=dk2722-simplewebapp --api-key=$heroku_api_key
+  environment: production
