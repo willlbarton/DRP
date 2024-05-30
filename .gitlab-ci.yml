@@ -6,7 +6,6 @@ compile:
     paths:
       - target/
   script:
-    - $MAVEN_HOME/bin/mvn clean
     - mvn compile
 
 test:
