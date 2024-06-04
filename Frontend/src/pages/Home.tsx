@@ -87,7 +87,7 @@ const Home = () => {
               </div>
             ))}
 
-            <Button type="submit">Continue</Button>
+            <Button onClick={() => console.log("Submit button was clicked")} type="submit">Continue</Button>
           </form>
         </CardContent>
       </Card>
