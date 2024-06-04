@@ -3,7 +3,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import React from "react";
+import React, { useRef } from "react";
 
 const FIELDS1 = [
   "Name",
@@ -27,9 +27,28 @@ const TABLE_FIELDS = [
   "Full Time Student? (Y/N)",
 ];
 
-const Home = () => {
-  const onSubmit = () => {
-    console.log("yeahh");
+type FormRefs = {
+  [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+};
+
+// const Home = () => {
+  // const onSubmit = () => {
+  //   console.log("yeahh");
+  // };
+
+const Home: React.FC = () => {
+  const formRefs = useRef<FormRefs>({});
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
+      const ref = formRefs.current[key];
+      if (ref) {
+        acc[key] = (ref as HTMLInputElement).type === "checkbox" ? (ref as HTMLInputElement).checked.toString() : ref.value;
+      }
+      return acc;
+    }, {} as { [key: string]: string });
+    console.log(values);
   };
 
   return (
@@ -45,7 +64,7 @@ const Home = () => {
                 <Label htmlFor={field} className="font-semibold">
                   {field}
                 </Label>
-                <Input id={field} placeholder={field} required />
+                <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
               </div>
             ))}
 
@@ -57,7 +76,7 @@ const Home = () => {
                   </div>
                   <div>
                     {[1, 2, 3, 4].map((_, i) => (
-                      <Input key={`${field}${i}`} placeholder={""} />
+                      <Input key={`${field}${i}`} placeholder={""} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
                     ))}
                   </div>
                 </div>
@@ -67,7 +86,7 @@ const Home = () => {
             {FIELDS2.map((field, i) => (
               <div key={i}>
                 <Label htmlFor={field}>{field}</Label>
-                <Input id={field} placeholder={field} required />
+                <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
               </div>
             ))}
 
@@ -83,16 +102,18 @@ const Home = () => {
                 <Label htmlFor={field} className="font-semibold">
                   {field}
                 </Label>
-                <Input id={field} placeholder={field} required />
+                <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
               </div>
             ))}
 
-            <Button onClick={() => console.log("Submit button was clicked")} type="submit">Continue</Button>
+            <Button onClick={() => {console.log("Submit button was clicked"); }} type="submit">Continue</Button>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 };
+
+console.log("Home Page Contents successfully loaded.");
 
 export default Home;
