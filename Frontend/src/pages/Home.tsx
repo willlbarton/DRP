@@ -22,7 +22,7 @@ const FIELDS2 = [
 const FIELDS3 = ["Email", "Signature", "Telephone Number"];
 
 const TABLE_FIELDS = [
-  "Names",
+  "Name",
   "Date Moved In",
   "Date of Birth",
   "Full Time Student? (Y/N)",
@@ -77,8 +77,8 @@ const Home: React.FC = () => {
                     {field}
                   </div>
                   <div>
-                    {[1, 2, 3, 4].map((_, i) => (
-                      <Input key={`${field}${i}`} placeholder={""} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
+                    {[1, 2, 3, 4, 5, 6].map((_, i) => (
+                      <Input key={`${field}${i}`} placeholder={field} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
                     ))}
                   </div>
                 </div>
