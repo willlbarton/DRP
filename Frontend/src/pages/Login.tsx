@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 
 export function Login() {
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-sm p-8 self-center w-[90%] max-w-[600px]">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
