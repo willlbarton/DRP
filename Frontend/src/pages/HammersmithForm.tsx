@@ -75,7 +75,7 @@ const HammersmithForm: React.FC = () => {
                     </div>
                     <div>
                       {[1, 2, 3, 4, 5, 6].map((_, i) => (
-                        <Input key={`${field}${i}`} placeholder={field} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
+                        <Input key={`${field}${i}`} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
                       ))}
                     </div>
                   </div>
