@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 
 const App = () => {
   return (
-    <Router>
+    <>
       <nav>
         <ul>
           <li>
@@ -25,7 +25,7 @@ const App = () => {
         <Route path="/form" element={<HammersmithForm />} />
         <Route path="/upload" element={<HammersmithUpload />} />
       </Routes>
-    </Router>
+      </>
   );
 };
 

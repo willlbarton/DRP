@@ -3,6 +3,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/authContexts";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -33,6 +34,9 @@ type FormRefs = {
 };
 
 const HammersmithForm: React.FC = () => {
+  const {currentUser} = useAuth()
+  console.log(currentUser?.uid)
+
   const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
 
@@ -68,8 +72,8 @@ const HammersmithForm: React.FC = () => {
             <div className="">
               <p className = "font-semibold mx-auto underline text-center">Resident Information</p>
               <div  className="flex overflow-x-auto">
-                {TABLE_FIELDS.map((field) => (
-                  <div>
+                {TABLE_FIELDS.map((field, i) => (
+                  <div key={i}>
                     <div className="text-nowrap font-semibold overflow-x-auto p-4 border">
                       {field}
                     </div>

@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navigate, Link, useNavigate } from "react-router-dom";
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../firebase/auth.ts";
+import { useAuth } from "../contexts/authContexts"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -12,6 +15,37 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 export function Login() {
+  const navigate = useNavigate();
+
+  const { userLoggedIn } = useAuth()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isSigningIn, setIsSigningIn] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if(!isSigningIn) {
+      setIsSigningIn(true)
+      await doSignInWithEmailAndPassword(email, password)
+    }
+  }
+
+  const onGoogleSignIn = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!isSigningIn) {
+      setIsSigningIn(true)
+      doSignInWithGoogle().catch((err: Error) => {
+        setIsSigningIn(false)
+      })
+    }
+  }
+
+  useEffect(() => {
+    if(userLoggedIn) {
+      navigate("/form")
+    }
+  }, [])
   return (
     <Card className="mx-auto max-w-sm p-8 self-center w-[90%] max-w-[600px]">
       <CardHeader>
@@ -40,7 +74,7 @@ export function Login() {
           <Button type="submit" className="w-full">
             Login
           </Button>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full" onClick={doSignInWithGoogle}>
             Login with Google
           </Button>
         </div>
