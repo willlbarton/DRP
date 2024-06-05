@@ -70,19 +70,22 @@ const Home: React.FC = () => {
               </div>
             ))}
 
-            <div className="flex overflow-x-auto">
-              {TABLE_FIELDS.map((field, i) => (
-                <div>
-                  <div className="text-nowrap font-semibold overflow-x-auto p-4 border">
-                    {field}
-                  </div>
+            <div className="">
+              <p className = "font-semibold mx-auto underline text-center">Resident Information</p>
+              <div  className="flex overflow-x-auto">
+                {TABLE_FIELDS.map((field) => (
                   <div>
-                    {[1, 2, 3, 4, 5, 6].map((_, i) => (
-                      <Input key={`${field}${i}`} placeholder={field} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
-                    ))}
+                    <div className="text-nowrap font-semibold overflow-x-auto p-4 border">
+                      {field}
+                    </div>
+                    <div>
+                      {[1, 2, 3, 4, 5, 6].map((_, i) => (
+                        <Input key={`${field}${i}`} placeholder={field} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
             {FIELDS2.map((field, i) => (
