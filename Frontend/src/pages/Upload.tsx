@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import React from "react";
+
 
 const Upload = () => {
   const onSubmit = () => {console.log("Submitted")}
