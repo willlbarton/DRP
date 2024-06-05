@@ -54,8 +54,8 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center px-[200px] py-[100px]">
-      <Card className="p-8">
+    <div className="flex flex-col justify-center w-screen">
+      <Card className="p-8 self-center w-[90%] max-w-[800px] ">
         <CardTitle>
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>

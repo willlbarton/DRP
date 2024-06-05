@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 const Upload = () => {
   const onSubmit = () => {console.log("Submitted")}
   return (
-    <div className="flex flex-col justify-center px-[200px] py-[100px]">
+    <div className="flex flex-col justify-center">
       <form onSubmit={onSubmit}>
-        <Card className="p-4">
+        <Card className="p-4 self-center w-[90%] max-w-[800px] ">
           <CardTitle>Upload Proof of Study</CardTitle>
           <CardContent className="mt-7">
             <Input
