@@ -1,7 +1,8 @@
 // src/App.jsx
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Home from "./pages/HammersmithForm";
-import Upload from "./pages/HammersmithUpload";
+import HammersmithForm from "./pages/HammersmithForm";
+import HammersmithUpload from "./pages/HammersmithUpload";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
@@ -9,7 +10,10 @@ const App = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">Login</Link>
+          </li>
+          <li>
+            <Link to="/form">Form</Link>
           </li>
           <li>
             <Link to="/upload">Upload</Link>
@@ -17,8 +21,9 @@ const App = () => {
         </ul>
       </nav>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/upload" element={<Upload />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/form" element={<HammersmithForm />} />
+        <Route path="/upload" element={<HammersmithUpload />} />
       </Routes>
     </Router>
   );
