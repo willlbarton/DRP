@@ -3,18 +3,18 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 
-const Upload = () => {
+const HammersmithUpload = () => {
   const onSubmit = () => {console.log("Submitted")}
   return (
-    <div className="flex flex-col justify-center">
-      <form onSubmit={onSubmit}>
-        <Card className="p-4 self-center w-[90%] max-w-[800px] ">
+    <div className="flex flex-col justify-center w-screen">
+      <form className="gap-8 flex flex-col" onSubmit={onSubmit}>
+        <Card className="p-8 self-center w-[90%] max-w-[800px]">
           <CardTitle>Upload Proof of Study</CardTitle>
           <CardContent className="mt-7">
             <Input
               type="file"
-              id="pdfUpload"
-              name="pdfUpload"
+              id="pdfHammersmithUpload"
+              name="pdfHammersmithUpload"
               accept="application/pdf"
               className="w-[300px] -ml-6"
               required
@@ -35,4 +35,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default HammersmithUpload;

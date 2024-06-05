@@ -32,12 +32,7 @@ type FormRefs = {
   [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 };
 
-// const Home = () => {
-  // const onSubmit = () => {
-  //   console.log("yeahh");
-  // };
-
-const Home: React.FC = () => {
+const HammersmithForm: React.FC = () => {
   const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
 
@@ -55,7 +50,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center w-screen">
-      <Card className="p-8 self-center w-[90%] max-w-[800px] ">
+      <Card className="p-8 self-center w-[90%] max-w-[800px]">
         <CardTitle>
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
@@ -119,6 +114,4 @@ const Home: React.FC = () => {
   );
 };
 
-console.log("Home Page Contents successfully loaded.");
-
-export default Home;
+export default HammersmithForm;
