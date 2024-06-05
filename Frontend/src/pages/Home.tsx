@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import React, { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FIELDS1 = [
   "Name",
@@ -37,6 +38,7 @@ type FormRefs = {
   // };
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
 
   const onSubmit = (e: React.FormEvent) => {
@@ -55,7 +57,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col justify-center px-[200px] py-[100px]">
       <Card className="p-8">
         <CardTitle>
-          Hammersmith and Fulham Council Tax Excemption Form
+          Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
         <CardContent className="mt-8">
           <form className="gap-8 flex flex-col" onSubmit={onSubmit}>
@@ -106,7 +108,7 @@ const Home: React.FC = () => {
               </div>
             ))}
 
-            <Button onClick={() => {console.log("Submit button was clicked"); }} type="submit">Continue</Button>
+            <Button type="submit" onClick={() => navigate("/upload")}> Continue </Button>
           </form>
         </CardContent>
       </Card>
