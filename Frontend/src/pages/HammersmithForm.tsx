@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { db } from "../firebase/firebase.ts";
+import pdfToText from 'react-pdftotext'
 
 const FIELDS1 = [
   "Name",
@@ -55,12 +56,13 @@ function validateProofOfStudy (text : string) {
   } else {
     console.log ("verified!");
   }
+}
 
 const HammersmithForm: React.FC = () => {
   const {currentUser} = useAuth()
 
   const [studyProofFile, setStudyProofFile] = useState(null);
-  const onStudyProofUpload = (event) => {
+  const onStudyProofUpload = (event: { target: { files: React.SetStateAction<null>[]; }; }) => {
     setStudyProofFile(event.target.files[0]);
   };
   const onStudyProofSubmit = async () => {
