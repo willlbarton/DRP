@@ -11,7 +11,8 @@ import {
 import { useAuth } from "@/contexts/authContexts";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../firebase/firebase.ts";
+import { db, storage } from "../firebase/firebase.ts";
+import { ref, uploadBytes } from "firebase/storage";
 import pdfToText from 'react-pdftotext'
 
 const LIGHT_GREEN = "#05e82e";
@@ -43,7 +44,6 @@ const TABLE_FIELDS = [
 type FormRefs = {
   [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 };
-
 
 function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) => void), setColor: ((arg0: string) => void)) {
   const pdfText = text.toLowerCase();
@@ -86,6 +86,10 @@ const HammersmithForm: React.FC = () => {
   
   const onStudyProofUpload = (event:any) => {
     const file = event.target.files[0];
+    const storageRef = ref(storage, `proofOfStudy/${currentUser?.uid}/${file.name}`);
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log('Uploaded a blob or file!');
+    });
     pdfToText(file)
         .then(text => {
           validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor);

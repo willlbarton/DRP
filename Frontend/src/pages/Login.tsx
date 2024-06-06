@@ -47,7 +47,7 @@ export function Login() {
   }, [])
   return (
     <div>
-      <Card className="mx-auto max-w-sm p-8 self-center w-[90%] max-w-[600px]">
+      <Card className="mx-auto max-w-sm p-8 mt-16 self-center w-[90%] max-w-[600px]">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
