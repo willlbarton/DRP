@@ -1,23 +1,68 @@
-import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import React from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { doSignOut } from '@/firebase/auth';
+import { useAuth } from '@/contexts/authContexts';
 
 const MainLayout = () => {
+  const navigate = useNavigate()
+  const { currentUser } = useAuth()
+
+  const handleSignOut = async () => {
+    await doSignOut();
+    navigate('/login');
+  };
+
+  const goToForm = () => {
+    if(currentUser) {
+        navigate("/form")
+    }
+  }
+
+  const goToLogin = () => {
+    if(!currentUser) {
+        navigate("/login")
+    }
+  }
+
   return (
-    <div>
-      <header>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/form">Form</Link></li>
-            <li><Link to="/login">Login</Link></li>
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-black text-white fixed top-0 left-0 right-0 z-50">
+        <nav className="container mx-auto p-4">
+          <ul className="flex space-x-6">
+            <li>
+              <Link to="/" className="hover:text-gray-300">
+                Home
+              </Link>
+            </li>
+            <li>
+            <button
+                onClick={goToForm}
+                className="hover:text-gray-300 focus:outline-none">
+                Form
+              </button>
+            </li>
+            <li>
+            <button
+                onClick={goToLogin}
+                className="hover:text-gray-300 focus:outline-none">
+                Login
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleSignOut}
+                className="hover:text-gray-300 focus:outline-none">
+                Sign out
+              </button>
+            </li>
           </ul>
         </nav>
       </header>
-      <main>
+      <main className="flex-grow container mx-auto p-4 pt-16 flex justify-center items-center">
         <Outlet />
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default MainLayout
+export default MainLayout;
