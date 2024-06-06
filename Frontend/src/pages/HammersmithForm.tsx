@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/authContexts";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { PdfUpload } from "../components/pdfUpload";
 import { db } from "../firebase/firebase.ts";
 
 const FIELDS1 = [
@@ -60,7 +61,7 @@ const HammersmithForm: React.FC = () => {
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
         <CardContent className="mt-8">
-          <form className="gap-8 flex flex-col" onSubmit={onSubmit}>
+          <form id="hammersmithform" className="gap-8 flex flex-col" onSubmit={onSubmit}>
             {FIELDS1.map((field, i) => (
               <div key={i}>
                 <Label htmlFor={field} className="font-semibold">
@@ -129,6 +130,7 @@ const HammersmithForm: React.FC = () => {
               </p>
               </div>
             </div>
+            <PdfUpload />
             <Button type="submit" onSubmit={onSubmit}> Submit </Button>
           </form>
         </CardContent>
