@@ -44,11 +44,11 @@ type FormRefs = {
 function validateProofOfStudy (text : string) {
   const pdfText = text.toLowerCase();
   // Check if transcript
-  if (text.includes("transcript")) {
+  if (pdfText.includes("transcript")) {
     console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.")
   }
-  else if (text.includes("imperial")) {
-    if (!text.includes("statement of registration")) {
+  else if (pdfText.includes("imperial")) {
+    if (!pdfText.includes("statement of registration")) {
       console.log("!Warning!: this Imperial College document is not a Statement of Registration");
     } else {
       console.log("Verified!");
@@ -61,20 +61,11 @@ function validateProofOfStudy (text : string) {
 const HammersmithForm: React.FC = () => {
   const {currentUser} = useAuth()
 
-  const [studyProofFile, setStudyProofFile] = useState(null);
-  const onStudyProofUpload = (event: { target: { files: React.SetStateAction<null>[]; }; }) => {
-    setStudyProofFile(event.target.files[0]);
-  };
-  const onStudyProofSubmit = async () => {
-    const formData = new FormData();
-    formData.append('pdfFile', studyProofFile);
-    // Send to backend for processing.
-    try {
-      const resp = await axios.post('backend/extract-pdf-text', formData);
-      validateProofOfStudy(resp.data.text);
-    } catch (error) {
-      console.error("Error on upload of file: ", error);
-    }
+  const onStudyProofUpload = (event:any) => {
+    const file = event.target.files[0];
+    pdfToText(file)
+        .then(text => validateProofOfStudy(text))
+        .catch(error => console.error("Failed to extract text from pdf"));
   };
 
   console.log(currentUser?.uid)
@@ -84,7 +75,6 @@ const HammersmithForm: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onStudyProofSubmit(); // validate proofs of study uploaded.
     const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
