@@ -14,6 +14,10 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../firebase/firebase.ts";
 import pdfToText from 'react-pdftotext'
 
+const LIGHT_GREEN = "#05e82e";
+const LIGHT_RED = "#ed3261";
+const TURQUOISE = "#e405e8";
+
 const FIELDS1 = [
   "Name",
   "Address",
@@ -41,19 +45,22 @@ type FormRefs = {
 };
 
 
-function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) => void)) {
+function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) => void), setColor: ((arg0: string) => void)) {
   const pdfText = text.toLowerCase();
   // Check if transcript
   if (pdfText.includes("transcript")) {
     setProofMessage("You uploaded a Transcript, not a Statement of Registration");
+    setColor(LIGHT_RED);
     console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
   }
   else if (pdfText.includes("imperial")) {
     if (!pdfText.includes("statement of registration")) {
       setProofMessage("This Imperial College London document is not a Statement of Registration");
+      setColor(LIGHT_RED)
       console.log("!Warning!: this Imperial College document is not a Statement of Registration");
     } else {
       setProofMessage("This looks correct!");
+      setColor(LIGHT_GREEN);
       console.log("Verified!");
     }
   } else {
@@ -65,7 +72,8 @@ function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) =
 const HammersmithForm: React.FC = () => {
   const [proofMessageVisible, setProofMessageVisible] = useState(false);
   const [proofMessage, setProofMessage] = useState("");
-  const [proofMessageStyle, setStudyProofMessageStyle] = useState("");
+  // Initially blue.
+  const [proofMessageBackgroundColor, setProofMessageBackgroundColor] = useState(LIGHT_GREEN);
   
   const {currentUser} = useAuth()
   
@@ -79,10 +87,11 @@ const HammersmithForm: React.FC = () => {
     const file = event.target.files[0];
     pdfToText(file)
         .then(text => {
-          validateProofOfStudy(text, setProofMessage);
+          validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor);
           })
           .catch(error => {
             setProofMessage("Failed to get text from your file.");
+            setProofMessageBackgroundColor(TURQUOISE);
             console.error("Upload failed")
             });
     setProofMessageVisible(true)
@@ -188,9 +197,11 @@ const HammersmithForm: React.FC = () => {
                 onChange={onStudyProofUpload}
                 required
               />
-              <div>
-                {proofMessageVisible && <p>{proofMessage}</p>}
-              </div>
+              {proofMessageVisible &&
+                <div style={{backgroundColor : proofMessageBackgroundColor, textAlign:"center"}}>
+                  {proofMessage}
+                </div>
+              }
               <div>
               <h2 className="font-semibold mt-1">What is Proof of Study?</h2>
               <p>
