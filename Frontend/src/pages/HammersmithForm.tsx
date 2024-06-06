@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/authContexts";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { PdfUpload } from "../components/pdfUpload";
 import { db } from "../firebase/firebase.ts";
 
 const FIELDS1 = [
@@ -130,7 +129,6 @@ const HammersmithForm: React.FC = () => {
               </p>
               </div>
             </div>
-            <PdfUpload />
             <Button type="submit" onSubmit={onSubmit}> Submit </Button>
           </form>
         </CardContent>
