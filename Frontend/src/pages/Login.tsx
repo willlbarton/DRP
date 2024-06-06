@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
-import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../firebase/auth.ts";
+import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../firebase/auth";
 import { useAuth } from "../contexts/authContexts"
 
 import { Button } from "@/components/ui/button"
@@ -21,7 +21,6 @@ export function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isSigningIn, setIsSigningIn] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -47,45 +46,55 @@ export function Login() {
     }
   }, [])
   return (
-    <Card className="mx-auto max-w-sm p-8 self-center w-[90%] max-w-[600px]">
-      <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
+    <div>
+      <Card className="mx-auto max-w-sm p-8 self-center w-[90%] max-w-[600px]">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={onSubmit}>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  placeholder="m@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                </div>
+                <Input id="password" 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required />
+              </div>
+              <Button type="submit" className="w-full" disabled={isSigningIn}>
+                Login
+              </Button>
+              <Button variant="outline" className="w-full" onClick={doSignInWithGoogle}>
+                Login with Google
+              </Button>
             </div>
-            <Input id="password" type="password" required />
-          </div>
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full" onClick={doSignInWithGoogle}>
-            Login with Google
-          </Button>
-        </div>
-        <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link to="#" className="underline">
-            Sign up
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+            <div className="mt-4 text-center text-sm">
+              Don&apos;t have an account?{" "}
+              <Link to="/register" className="underline">
+                Sign up
+              </Link>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

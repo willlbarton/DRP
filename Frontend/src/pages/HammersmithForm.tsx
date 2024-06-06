@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/authContexts";
 import React, { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "../firebase/firebase.ts";
 
 const FIELDS1 = [
   "Name",
