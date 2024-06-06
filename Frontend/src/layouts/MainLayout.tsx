@@ -18,12 +18,6 @@ const MainLayout = () => {
     }
   };
 
-  const goToLogin = () => {
-    if (!currentUser) {
-      navigate("/login");
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-black text-white fixed top-0 left-0 right-0 z-50 h-20">
@@ -54,7 +48,7 @@ const MainLayout = () => {
             ) : (
               <li>
                 <button
-                  onClick={goToLogin}
+                  onClick={() => navigate('/login')}
                   className="hover:text-gray-300 focus:outline-none"
                 >
                   Login
