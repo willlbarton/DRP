@@ -9,7 +9,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { useAuth } from "@/contexts/authContexts";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase/firebase.ts";
 
@@ -57,6 +57,12 @@ const HammersmithForm: React.FC = () => {
     }, {} as { [key: string]: string });
     console.log(values);
   };
+
+  useEffect(() => {
+    if(!currentUser) {
+      navigate("/login")
+    }
+  }, [])
 
   return (
     <div className="flex flex-col justify-center w-screen">
