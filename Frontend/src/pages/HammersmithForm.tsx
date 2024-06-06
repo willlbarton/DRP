@@ -110,8 +110,26 @@ const HammersmithForm: React.FC = () => {
                 <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
               </div>
             ))}
-
-            <Button type="submit" onClick={() => navigate("/upload")}> Continue </Button>
+            <div className="space-y-4">
+              <p className = "font-semibold underline">Upload Proof of Study</p>
+              <Input
+                type="file"
+                id="pdfHammersmithUpload"
+                name="pdfHammersmithUpload"
+                accept="application/pdf"
+                className="w-[300px]"
+                required
+              />
+              <div>
+              <h2 className="font-semibold mt-1">What is Proof of Study?</h2>
+              <p>
+                That would be proof of registration for the{" "}
+                <span className="underline">current</span> academic year, NOT the
+                previous year's transcript.
+              </p>
+              </div>
+            </div>
+            <Button type="submit" onSubmit={onSubmit}> Submit </Button>
           </form>
         </CardContent>
       </Card>
