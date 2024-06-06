@@ -4,9 +4,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/authContexts";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PdfUpload } from "../components/pdfUpload";
+import axios from 'axios';
 import { db } from "../firebase/firebase.ts";
 
 const FIELDS1 = [
@@ -35,8 +36,41 @@ type FormRefs = {
   [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 };
 
+function validateProofOfStudy (text : string) {
+  const pdfText = text.toLowerCase();
+  // Check if transcript
+  if (text.includes("transcript")) {
+    console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.")
+  }
+  else if (text.includes("imperial")) {
+    if (!text.includes("statement of registration")) {
+      console.log("!Warning!: this Imperial College document is not a Statement of Registration");
+    } else {
+      console.log("Verified!");
+    }
+  } else {
+    console.log ("verified!");
+  }
+
 const HammersmithForm: React.FC = () => {
   const {currentUser} = useAuth()
+
+  const [studyProofFile, setStudyProofFile] = useState(null);
+  const onStudyProofUpload = (event) => {
+    setStudyProofFile(event.target.files[0]);
+  };
+  const onStudyProofSubmit = async () => {
+    const formData = new FormData();
+    formData.append('pdfFile', studyProofFile);
+    // Send to backend for processing.
+    try {
+      const resp = await axios.post('backend/extract-pdf-text', formData);
+      validateProofOfStudy(resp.data.text);
+    } catch (error) {
+      console.error("Error on upload of file: ", error);
+    }
+  };
+
   console.log(currentUser?.uid)
 
   const navigate = useNavigate();
@@ -44,6 +78,7 @@ const HammersmithForm: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    onStudyProofSubmit(); // validate proofs of study uploaded.
     const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
@@ -119,6 +154,7 @@ const HammersmithForm: React.FC = () => {
                 name="pdfHammersmithUpload"
                 accept="application/pdf"
                 className="w-[300px]"
+                onChange={onStudyProofUpload}
                 required
               />
               <div>
