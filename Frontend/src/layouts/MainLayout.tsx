@@ -20,7 +20,7 @@ const MainLayout = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-black text-white fixed top-0 left-0 right-0 z-50 h-20">
+      <header className="bg-primary text-white fixed top-0 left-0 right-0 z-50 h-20">
         <nav className="container mx-auto h-full flex items-center justify-between">
           <ul className="flex w-full justify-evenly text-lg">
             <li>
