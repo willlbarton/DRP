@@ -40,37 +40,53 @@ type FormRefs = {
   [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 };
 
-function validateProofOfStudy (text : string) {
+
+function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) => void)) {
   const pdfText = text.toLowerCase();
   // Check if transcript
   if (pdfText.includes("transcript")) {
-    console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.")
+    setProofMessage("You uploaded a Transcript, not a Statement of Registration");
+    console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
   }
   else if (pdfText.includes("imperial")) {
     if (!pdfText.includes("statement of registration")) {
+      setProofMessage("This Imperial College London document is not a Statement of Registration");
       console.log("!Warning!: this Imperial College document is not a Statement of Registration");
     } else {
+      setProofMessage("This looks correct!");
       console.log("Verified!");
     }
   } else {
+    setProofMessage("This looks correct!");
     console.log ("verified!");
   }
 }
 
 const HammersmithForm: React.FC = () => {
+  const [proofMessageVisible, setProofMessageVisible] = useState(false);
+  const [proofMessage, setProofMessage] = useState("");
+  const [proofMessageStyle, setStudyProofMessageStyle] = useState("");
+  
   const {currentUser} = useAuth()
-
+  
+  
+  console.log(currentUser?.uid)
+  
+  const navigate = useNavigate();
+  const formRefs = useRef<FormRefs>({});
+  
   const onStudyProofUpload = (event:any) => {
     const file = event.target.files[0];
     pdfToText(file)
-        .then(text => validateProofOfStudy(text))
-        .catch(error => console.error("Failed to extract text from pdf"));
+        .then(text => {
+          validateProofOfStudy(text, setProofMessage);
+          })
+          .catch(error => {
+            setProofMessage("Failed to get text from your file.");
+            console.error("Upload failed")
+            });
+    setProofMessageVisible(true)
   };
-
-  console.log(currentUser?.uid)
-
-  const navigate = useNavigate();
-  const formRefs = useRef<FormRefs>({});
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,6 +188,9 @@ const HammersmithForm: React.FC = () => {
                 onChange={onStudyProofUpload}
                 required
               />
+              <div>
+                {proofMessageVisible && <p>{proofMessage}</p>}
+              </div>
               <div>
               <h2 className="font-semibold mt-1">What is Proof of Study?</h2>
               <p>
