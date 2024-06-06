@@ -3,10 +3,14 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 import { useAuth } from "@/contexts/authContexts";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PdfUpload } from "../components/pdfUpload";
 import axios from 'axios';
 import { db } from "../firebase/firebase.ts";
 
@@ -89,6 +93,12 @@ const HammersmithForm: React.FC = () => {
     console.log(values);
   };
 
+  useEffect(() => {
+    if(!currentUser) {
+      navigate("/login")
+    }
+  }, [])
+
   return (
     <div className="flex flex-col justify-center w-screen">
       <Card className="p-8 self-center w-[90%] max-w-[800px]">
@@ -97,14 +107,28 @@ const HammersmithForm: React.FC = () => {
         </CardTitle>
         <CardContent className="mt-8">
           <form id="hammersmithform" className="gap-8 flex flex-col" onSubmit={onSubmit}>
-            {FIELDS1.map((field, i) => (
-              <div key={i}>
-                <Label htmlFor={field} className="font-semibold">
-                  {field}
-                </Label>
-                <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
-              </div>
-            ))}
+          {FIELDS1.map((field, i) => (
+            <div key={i} className="mb-4">
+              <Label htmlFor={field} className="font-semibold">
+                {field}
+              </Label>
+              {i === 1 || i === 4 ? ( // Check if the index is 2 or 5 (0-based index)
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Button variant="ghost" className="ml-2">i</Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent>
+                  {i === 1 ? (
+                    <span>Address you live at. Mail will be sent here.</span>
+                  ) : (
+                    <span>Address of the property eligible for council tax exemption</span>
+                  )}
+                  </HoverCardContent>
+                </HoverCard>
+              ) : null}
+              <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
+            </div>
+          ))}
 
             <div className="">
               <p className = "font-semibold mx-auto underline text-center">Resident Information</p>
@@ -166,7 +190,6 @@ const HammersmithForm: React.FC = () => {
               </p>
               </div>
             </div>
-            <PdfUpload />
             <Button type="submit" onSubmit={onSubmit}> Submit </Button>
           </form>
         </CardContent>

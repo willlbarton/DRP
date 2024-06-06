@@ -81,7 +81,7 @@ export function Login() {
               <Button type="submit" className="w-full" disabled={isSigningIn}>
                 Login
               </Button>
-              <Button variant="outline" className="w-full" onClick={doSignInWithGoogle}>
+              <Button variant="outline" className="w-full" onClick={onGoogleSignIn}>
                 Login with Google
               </Button>
             </div>
