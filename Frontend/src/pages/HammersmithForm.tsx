@@ -65,6 +65,7 @@ function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) =
     }
   } else {
     setProofMessage("This looks correct!");
+    setColor(LIGHT_GREEN);
     console.log ("verified!");
   }
 }
