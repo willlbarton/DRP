@@ -58,7 +58,7 @@ const MainLayout = () => {
           </ul>
         </nav>
       </header>
-      <main className="flex-grow container mx-auto p-4 pt-20 flex justify-center items-center">
+      <main className="flex-grow container mx-auto p-4 pt-20 flex justify-center">
         <Outlet />
       </main>
     </div>
