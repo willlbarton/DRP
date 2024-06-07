@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../firebase/firebase.ts";
 import { ref, uploadBytes } from "firebase/storage";
+import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
 
 const LIGHT_GREEN = "#05e82e";
@@ -104,10 +105,14 @@ const HammersmithForm: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const userId = currentUser?.uid || 'defaultUID';
+    const docRef = doc(db, 'users', userId);
     const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
-        acc[key] = (ref as HTMLInputElement).type === "checkbox" ? (ref as HTMLInputElement).checked.toString() : ref.value;
+        const val = (ref as HTMLInputElement).type === "checkbox" ? (ref as HTMLInputElement).checked.toString() : ref.value;
+        acc[key] = val;
+        setDoc(docRef, { [key]: val }, { merge: true })
       }
       return acc;
     }, {} as { [key: string]: string });
