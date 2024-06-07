@@ -15,6 +15,7 @@ import { db, storage } from "../firebase/firebase.ts";
 import { ref, uploadBytes } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
+import { PDFDocument } from 'pdf-lib';
 
 const LIGHT_GREEN = "#05e82e";
 const LIGHT_RED = "#ed3261";
@@ -147,7 +148,7 @@ const HammersmithForm: React.FC = () => {
       }
       return acc;
     }, {} as { [key: string]: string });
-    console.log(values);
+    navigate("/form-viewer");
   };
 
   useEffect(() => {
