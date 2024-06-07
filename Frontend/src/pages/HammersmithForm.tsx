@@ -52,26 +52,29 @@ function validateProofOfStudy
   setColor: ((arg0: string) => void),
   postcode : string) {
   const pdfText = text.toLowerCase();
-  // Check if transcript
-  if (pdfText.includes("transcript")) {
-    setProofMessage("You uploaded a Transcript, not a Statement of Registration");
-    setColor(LIGHT_RED);
-    console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
-  }
-  else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
-    setProofMessage("This Imperial College London document is not a Statement of Registration");
-    setColor(LIGHT_RED)
-    console.log("!Warning!: this Imperial College document is not a Statement of Registration");
-  } else {
-    // Check names and postcode matches.
-    if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
-      setProofMessage("This looks correct!");
-      setColor(LIGHT_GREEN);
-      console.log ("found postcode " + postcode + " in file.");
-    } else {
-      setProofMessage("Your proof of study should contain your Postcode: " + postcode);
+  // Only check proof of study if something has been uploaded.
+  if (text != "") {
+    // Check if transcript
+    if (pdfText.includes("transcript")) {
+      setProofMessage("You uploaded a Transcript, not a Statement of Registration");
+      setColor(LIGHT_RED);
+      console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
+    }
+    else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
+      setProofMessage("This Imperial College London document is not a Statement of Registration");
       setColor(LIGHT_RED)
-      console.log("!Warning!: proof of study does not contain postcode.");
+      console.log("!Warning!: this Imperial College document is not a Statement of Registration");
+    } else {
+      // Check names and postcode matches.
+      if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
+        setProofMessage("This looks correct!");
+        setColor(LIGHT_GREEN);
+        console.log ("found postcode " + postcode + " in file.");
+      } else {
+        setProofMessage("Your proof of study should contain your Postcode: " + postcode);
+        setColor(LIGHT_RED)
+        console.log("!Warning!: proof of study does not contain postcode.");
+      }
     }
   }
 }
@@ -81,6 +84,7 @@ const HammersmithForm: React.FC = () => {
   const [proofMessage, setProofMessage] = useState("");
   // Initially blue.
   const [proofMessageBackgroundColor, setProofMessageBackgroundColor] = useState(LIGHT_GREEN);
+  const [proofOfStudyFileText, setProofOfStudyFileText] = useState("");
 
   const [postcode, setPostcode] = useState("");
   
@@ -99,6 +103,7 @@ const HammersmithForm: React.FC = () => {
       // Postcode updated.
       setPostcode(e.target.value);
       console.log("Postcode updated to " + postcode);
+      validateProofOfStudy(proofOfStudyFileText, setProofMessage, setProofMessageBackgroundColor, postcode);
     }
   }
   
@@ -110,11 +115,13 @@ const HammersmithForm: React.FC = () => {
     });
     pdfToText(file)
         .then(text => {
+          setProofOfStudyFileText(text);
           validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor, postcode);
           })
           .catch(error => {
             setProofMessage("Failed to get text from your file.");
             setProofMessageBackgroundColor(TURQUOISE);
+            setProofOfStudyFileText(""); // no file uploaded.
             console.error("Upload failed")
             });
     setProofMessageVisible(true)
