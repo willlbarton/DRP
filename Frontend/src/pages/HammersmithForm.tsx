@@ -19,6 +19,7 @@ import pdfToText from 'react-pdftotext'
 const LIGHT_GREEN = "#05e82e";
 const LIGHT_RED = "#ed3261";
 const TURQUOISE = "#e405e8";
+const LIGHT_ORANGE = "#fcba03";
 
 const FIELDS1 = [
   "Name",
@@ -67,9 +68,15 @@ function validateProofOfStudy
     } else {
       // Check names and postcode matches.
       if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
-        setProofMessage("This looks correct!");
-        setColor(LIGHT_GREEN);
+        // This is probably correct, but we could have warnings.
         console.log ("found postcode " + postcode + " in file.");
+        if (!pdfText.includes("registration")) {
+          setProofMessage("Hmm... This doesn't look like a registration document.")
+          setColor(LIGHT_ORANGE);
+        } else {
+          setProofMessage("This looks correct!");
+          setColor(LIGHT_GREEN);
+        }
       } else {
         setProofMessage("Your proof of study should contain your Postcode: " + postcode);
         setColor(LIGHT_RED)
