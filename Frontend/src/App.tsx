@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import MainLayout from "./layouts/MainLayout";
+import FormViewer from "./pages/FormViewer";
 
 const App = () => {
   return (
@@ -14,7 +15,8 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="/form" element={<HammersmithForm />} />
           <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/form-viewer" element={<FormViewer />} />
         </Route>
       </Routes>
       <SpeedInsights />
