@@ -39,7 +39,7 @@ export function Register() {
 
   useEffect(() => {
     if(userLoggedIn) {
-      navigate("/form")
+      navigate("/")
     }
   }, [userLoggedIn])
 

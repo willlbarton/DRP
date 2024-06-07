@@ -42,7 +42,7 @@ export function Login() {
 
   useEffect(() => {
     if(userLoggedIn) {
-      navigate("/form")
+      navigate("/")
     }
   }, [])
   return (

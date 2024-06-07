@@ -137,11 +137,11 @@ const FormViewer = () => {
         <CardContent className="flex flex-col gap-8 mt-8">
           <Button onClick={fillPdf}>Get filled in form</Button>
             {pdfUrl && (
-              <Button>
-              <a href={pdfUrl} download="filled_form.pdf">
-                Download Filled PDF
-              </a>
-              </Button>
+                <a href={pdfUrl} download="filled_form.pdf" className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
+                  <Button>
+                  Download Filled PDF
+                  </Button>
+                </a>
             )}
         </CardContent>
         </Card>
