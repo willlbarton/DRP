@@ -162,6 +162,7 @@ const HammersmithForm: React.FC = () => {
         <CardTitle>
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
+        <p style={{color:TURQUOISE}}><b>TIP</b>: hover over the <Button variant="ghost" className="ml-2">i</Button> if confused.</p>
         <CardContent className="mt-8">
           <form id="hammersmithform" className="gap-8 flex flex-col" onSubmit={onSubmit}>
           {FIELDS1.map((field, i) => (
