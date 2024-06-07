@@ -46,7 +46,11 @@ type FormRefs = {
   [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
 };
 
-function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) => void), setColor: ((arg0: string) => void)) {
+function validateProofOfStudy
+  (text : string,
+  setProofMessage: ((arg0: string) => void), 
+  setColor: ((arg0: string) => void),
+  postcode : string) {
   const pdfText = text.toLowerCase();
   // Check if transcript
   if (pdfText.includes("transcript")) {
@@ -54,20 +58,21 @@ function validateProofOfStudy (text : string, setProofMessage: ((arg0: string) =
     setColor(LIGHT_RED);
     console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
   }
-  else if (pdfText.includes("imperial")) {
-    if (!pdfText.includes("statement of registration")) {
-      setProofMessage("This Imperial College London document is not a Statement of Registration");
-      setColor(LIGHT_RED)
-      console.log("!Warning!: this Imperial College document is not a Statement of Registration");
-    } else {
+  else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
+    setProofMessage("This Imperial College London document is not a Statement of Registration");
+    setColor(LIGHT_RED)
+    console.log("!Warning!: this Imperial College document is not a Statement of Registration");
+  } else {
+    // Check names and postcode matches.
+    if (pdfText.replace(" ", "").includes(postcode.toLowerCase())) {
       setProofMessage("This looks correct!");
       setColor(LIGHT_GREEN);
-      console.log("Verified!");
+      console.log ("found postcode " + postcode + " in file.");
+    } else {
+      setProofMessage("Your proof of study should contain your Postcode: " + postcode);
+      setColor(LIGHT_RED)
+      console.log("!Warning!: proof of study does not contain postcode.");
     }
-  } else {
-    setProofMessage("This looks correct!");
-    setColor(LIGHT_GREEN);
-    console.log ("verified!");
   }
 }
 
@@ -76,6 +81,8 @@ const HammersmithForm: React.FC = () => {
   const [proofMessage, setProofMessage] = useState("");
   // Initially blue.
   const [proofMessageBackgroundColor, setProofMessageBackgroundColor] = useState(LIGHT_GREEN);
+
+  const [postcode, setPostcode] = useState("");
   
   const {currentUser} = useAuth()
   
@@ -84,6 +91,16 @@ const HammersmithForm: React.FC = () => {
   
   const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
+
+  const handleFieldChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Handling field change.");
+    if (i == 2) {
+      console.log("Postcode was " + postcode);
+      // Postcode updated.
+      setPostcode(e.target.value);
+      console.log("Postcode updated to " + postcode);
+    }
+  }
   
   const onStudyProofUpload = (event:any) => {
     const file = event.target.files[0];
@@ -93,7 +110,7 @@ const HammersmithForm: React.FC = () => {
     });
     pdfToText(file)
         .then(text => {
-          validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor);
+          validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor, postcode);
           })
           .catch(error => {
             setProofMessage("Failed to get text from your file.");
@@ -152,7 +169,7 @@ const HammersmithForm: React.FC = () => {
                   </HoverCardContent>
                 </HoverCard>
               ) : null}
-              <Input id={field} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
+              <Input id={field} onChange={(e) => handleFieldChange(i, e)} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
             </div>
           ))}
 
