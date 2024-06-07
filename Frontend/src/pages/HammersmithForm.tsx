@@ -23,7 +23,7 @@ const LIGHT_ORANGE = "#fcba03";
 
 const FIELDS1 = [
   "Name",
-  "Address",
+  "Home Address",
   "Postcode",
   "Council Tax Reference Number",
   "Property Address",
@@ -169,7 +169,7 @@ const HammersmithForm: React.FC = () => {
               <Label htmlFor={field} className="font-semibold">
                 {field}
               </Label>
-              {i === 1 || i === 4 ? ( // Check if the index is 2 or 5 (0-based index)
+              {i == 0 || i === 1 || i === 4 ? ( // Check if the index is 2 or 5 (0-based index)
                 <HoverCard>
                   <HoverCardTrigger asChild>
                     <Button variant="ghost" className="ml-2">i</Button>
@@ -177,9 +177,9 @@ const HammersmithForm: React.FC = () => {
                   <HoverCardContent>
                   {i === 1 ? (
                     <span>Address you live at. Mail will be sent here.</span>
-                  ) : (
+                  ) : (i == 4) ? (
                     <span>Address of the property eligible for council tax exemption</span>
-                  )}
+                  ) : <span>First name and Surname only</span>}
                   </HoverCardContent>
                 </HoverCard>
               ) : null}
