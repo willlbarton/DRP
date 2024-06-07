@@ -64,7 +64,7 @@ function validateProofOfStudy
     console.log("!Warning!: this Imperial College document is not a Statement of Registration");
   } else {
     // Check names and postcode matches.
-    if (pdfText.replace(" ", "").includes(postcode.toLowerCase())) {
+    if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
       setProofMessage("This looks correct!");
       setColor(LIGHT_GREEN);
       console.log ("found postcode " + postcode + " in file.");
