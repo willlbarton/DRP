@@ -8,113 +8,118 @@ import { Button } from '@/components/ui/button';
 
 const FormViewer = () => {
   const [pdfUrl, setPdfUrl] = useState('');
-  const [pdfBlob, setPdfBlob] = useState(null);
+  const [pdfBlob, setPdfBlob] = useState<Blob | undefined>();
   const { currentUser } = useAuth();
 
   const fillPdf = async () => {
-    const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const form = pdfDoc.getForm();
-    const fields = form.getFields();
-    
-    fields.forEach(async field => {
-      switch (field.constructor.name) {
-        case 'PDFTextField2':
-          const name = field.getName();
-          var dst = ""
-          switch (name) {
-            case 'Name':
-              dst = "Name"
-              console.log("Name")
-              break;
-            case 'Address':
-              dst = "Address"
-              break;
-            case 'Postcode':
-              dst = "Postcode"
-              break;
-            case 'Property address':
-              dst = "Property Address"
-              break;
-            case 'Names of all residents':
-              dst = "Name0"
-              break;
-            case 'Names of all residents1':
-              dst = "Name1"
-              break;
-            case 'Names of all residents2':
-              dst = "Name2"
-              break;
-            case 'Names of all residents3':
-              dst = "Name3"
-              break;
-            case 'Names of all residents4':
-              dst = "Name4"
-              break;
-            case 'Names of all residents5':
-              dst = "Name5"
-              break;
-            case 'date moved in 2':
-              dst = "Date Moved In0"
-              break;
-            case '1':
-              dst = "Date Moved In1"
-              break;
-            case '2':
-              dst = "Date Moved In2"
-              break;
-            case '1_3':
-              dst = "Date Moved In3"
-              break;
-            case '2_3':
-              dst = "Date Moved In4"
-              break;
-            case '2_5':
-              dst = "Date Moved In5"
-              break;
-            case 'date of birth 2':
-              dst = "Date of Birth0"
-              break;
-            case '1_2':
-              dst = "Date of Birth1"
-              break;
-            case '2_2':
-              dst = "Date of Birth2"
-              break;
-            case '1_4':
-              dst = "Date of Birth3"
-              break;
-            case '2_4':
-              dst = "Date of Birth4"
-              break;
-            case '2_6':
-              dst = "Date of Birth5"
-              break;
-          }
-          const userId = currentUser?.uid || 'defaultUID';
-          const docRef = doc(db, 'users', userId);
-          const docSnap = await getDoc(docRef);
-          console.log(dst)
-          const val = docSnap.data()?.[dst];
-          console.log(val)
-          form.getTextField(name).setText(val || '');
-          console.log(name + ":"+form.getTextField(name).getText())
-      }
-    });
+  const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
+  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  const form = pdfDoc.getForm();
+  const fields = form.getFields();
+  
+  const userId = currentUser?.uid || 'defaultUID';
+  const docRef = doc(db, 'users', userId);
+  const docSnap = await getDoc(docRef);
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    setPdfUrl(url);
-    console.log(pdfUrl);
-  }
+  // A list of promises for each field update
+  const fieldUpdatePromises = fields.map(async field => {
+    if (field.constructor.name === 'PDFTextField2') {
+      const name = field.getName();
+      let dst = '';
+      
+      switch (name) {
+        case 'Name':
+          dst = 'Name';
+          break;
+        case 'Address':
+          dst = 'Address';
+          break;
+        case 'Postcode':
+          dst = 'Postcode';
+          break;
+        case 'Property address':
+          dst = 'Property Address';
+          break;
+        case 'Names of all residents':
+          dst = 'Name0';
+          break;
+        case 'Names of all residents1':
+          dst = 'Name1';
+          break;
+        case 'Names of all residents2':
+          dst = 'Name2';
+          break;
+        case 'Names of all residents3':
+          dst = 'Name3';
+          break;
+        case 'Names of all residents4':
+          dst = 'Name4';
+          break;
+        case 'Names of all residents5':
+          dst = 'Name5';
+          break;
+        case 'date moved in 2':
+          dst = 'Date Moved In0';
+          break;
+        case '1':
+          dst = 'Date Moved In1';
+          break;
+        case '2':
+          dst = 'Date Moved In2';
+          break;
+        case '1_3':
+          dst = 'Date Moved In3';
+          break;
+        case '2_3':
+          dst = 'Date Moved In4';
+          break;
+        case '2-5':
+          dst = 'Date Moved In5';
+          break;
+        case 'date of birth 2':
+          dst = 'Date of Birth0';
+          break;
+        case '1_2':
+          dst = 'Date of Birth1';
+          break;
+        case '2_2':
+          dst = 'Date of Birth2';
+          break;
+        case '1_4':
+          dst = 'Date of Birth3';
+          break;
+        case '2_4':
+          dst = 'Date of Birth4';
+          break;
+        case '2-6':
+          dst = 'Date of Birth5';
+          break;
+      }
+
+      const val = docSnap.data()?.[dst];
+      form.getTextField(name).setText(val || '');
+
+      console.log(`${name}: ${form.getTextField(name).getText()}`);
+    }
+  });
+
+  // Wait for all field updates to complete
+  await Promise.all(fieldUpdatePromises);
+
+  const pdfBytes = await pdfDoc.save();
+  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  setPdfUrl(url);
+  setPdfBlob(blob);
+  console.log(pdfUrl);
+}
 
   const download = async () => {
     fillPdf();
   }
 
   const listFormFields = async () => {
-    const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
+    const existingPdfBytes = await fetch('@/public/form.pdf').then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm();
     const fields = form.getFields();

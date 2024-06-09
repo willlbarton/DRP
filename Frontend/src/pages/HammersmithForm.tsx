@@ -16,6 +16,7 @@ import { ref, uploadBytes } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
 import { PDFDocument } from 'pdf-lib';
+import { Info } from "lucide-react";
 
 const LIGHT_GREEN = "#05e82e";
 const LIGHT_RED = "#ed3261";
@@ -174,7 +175,7 @@ const HammersmithForm: React.FC = () => {
               {i == 0 || i === 1 || i === 4 ? ( // Check if the index is 2 or 5 (0-based index)
                 <HoverCard>
                   <HoverCardTrigger asChild>
-                    <Button variant="ghost" className="ml-2">i</Button>
+                    <Button variant="ghost" className="ml-2"><Info className="size-4"/></Button>
                   </HoverCardTrigger>
                   <HoverCardContent>
                   {i === 1 ? (
