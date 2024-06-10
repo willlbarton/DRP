@@ -8,7 +8,8 @@
     "build": "./build.sh",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
     "preview": "vite preview",
-    "vercel-build": "npm ci && ./build.sh"
+    "vercel-build": "npm ci && ./build.sh",
+    "postinstall": "if [ \"$VERCEL\" = \"1\" ]; then npm ci; fi"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
