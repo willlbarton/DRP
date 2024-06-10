@@ -16,6 +16,7 @@ const FormViewer = () => {
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
   const fields = form.getFields();
+  console.log("Fields: ", fields)
   
   const userId = currentUser?.uid || 'defaultUID';
   const docRef = doc(db, 'users', userId);
@@ -32,7 +33,7 @@ const FormViewer = () => {
           dst = 'Name';
           break;
         case 'Address':
-          dst = 'Address';
+          dst = 'Home Address';
           break;
         case 'Postcode':
           dst = 'Postcode';
