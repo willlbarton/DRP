@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import MainLayout from "./layouts/MainLayout";
 import FormViewer from "./pages/FormViewer";
+import HelpPage from "./pages/HelpPage";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
+          <Route path="/book-call" element={<HelpPage />} />
           <Route path="/form" element={<HammersmithForm />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
