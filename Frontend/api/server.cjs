@@ -28,7 +28,7 @@ const times = [9,10,11,12,13,14,15,16,17].flatMap((hour) => [
 // for now, do not load availabilities from database.
 let availability = new Map(times.map((time) => [time, true]));
 // handle new connections
-let connections : any[] = [];
+let connections = [];
 io.on('connect', (socket) => {
     connections.push(socket);
     console.log("New client connection to server.");
