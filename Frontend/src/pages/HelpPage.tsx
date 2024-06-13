@@ -20,11 +20,11 @@ const HelpPage = () => {
      console.log("Connected to socket.io server!");
     });
     // Update button availability on new info from server.
-    socket.on("servedAvailabilityChange", (newAvailability: Map<String, Boolean>) => {
+    socket.on("servedAvailability", (newAvailability: Map<String, Boolean>) => {
       setAvailability(newAvailability);
       console.log("Availabilities updated on client.");
      });
-    socket.emit("requestAvailability", null);
+     // connecting automatically requests availability.
   });
 
   const updateTime = (event: any) => {
