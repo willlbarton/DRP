@@ -12,7 +12,7 @@ const HelpPage = () => {
    transports: ["websocket"],
   };
   const [selectedTime, setSelectedTime] = useState("");
-  const [getAvailability, setAvailability] = useState(new Map()); // map from e.g. "9:00" to boolean.
+  const [getAvailability, setAvailability] = useState(new Map([["9:00",true]])); // map from e.g. "9:00" to boolean.
   const socket = io(server, connectionSettings); // server connection
   useEffect(() => {
     // Event listener for successful connection
@@ -20,7 +20,7 @@ const HelpPage = () => {
      console.log("Connected to socket.io server!");
     });
     // Update button availability on new info from server.
-    socket.on("servedAvailability", (newAvailability: Map<String, Boolean>) => {
+    socket.on("servedAvailability", (newAvailability: Map<string, boolean>) => {
       setAvailability(newAvailability);
       console.log("Availabilities updated on client.");
      });
@@ -32,7 +32,8 @@ const HelpPage = () => {
     console.log("PRESSED! " + t);
     setSelectedTime(t);
   }
-  const isAvailable = (time : String) => {
+  const isAvailable = (time : string) => {
+    console.log("availability: " + getAvailability);
     if (!getAvailability.has(time)) {
       return true;
     }
