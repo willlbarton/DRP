@@ -1,13 +1,10 @@
 // Server file
-// Credit: some code from vecel website.
 
 // Express dependencies and config.
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-app.get("/", (req, res) => res.send("Express on Vercel")); // define base route.
 
 // Setup CORS, start server.
 const { createServer } = require("http");
@@ -45,5 +42,3 @@ io.on('connect', (socket) => {
 httpServer.listen(PORT, () => {
  console.log(`Server is listening on port ${PORT}`);
 });
-
-module.exports = app
