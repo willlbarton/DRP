@@ -17,6 +17,7 @@ import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
 import { PDFDocument } from 'pdf-lib';
 import { Info } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 
 const LIGHT_GREEN = "#05e82e";
 const LIGHT_RED = "#ed3261";
@@ -42,7 +43,7 @@ const TABLE_FIELDS = [
   "Name",
   "Date Moved In",
   "Date of Birth",
-  "Full Time Student? (Y/N)",
+  "Full Time Student?",
 ];
 
 type FormRefs = {
@@ -106,12 +107,8 @@ const HammersmithForm: React.FC = () => {
   const formRefs = useRef<FormRefs>({});
 
   const handleFieldChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Handling field change.");
     if (i == 2) {
-      console.log("Postcode was " + postcode);
-      // Postcode updated.
       setPostcode(e.target.value);
-      console.log("Postcode updated to " + postcode);
       validateProofOfStudy(proofOfStudyFileText, setProofMessage, setProofMessageBackgroundColor, postcode);
     }
   }
@@ -189,22 +186,38 @@ const HammersmithForm: React.FC = () => {
               <Input id={field} onChange={(e) => handleFieldChange(i, e)} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
             </div>
           ))}
-
-            <div className="">
-              <p className = "font-semibold mx-auto underline text-center">Resident Information</p>
-              <div  className="flex overflow-x-auto">
-                {TABLE_FIELDS.map((field, i) => (
-                  <div key={i}>
-                    <div className="text-nowrap font-semibold overflow-x-auto p-4 border">
-                      {field}
-                    </div>
-                    <div>
-                      {[1, 2, 3, 4, 5, 6].map((_, i) => (
-                        <Input className="border rounded-none outline-none focus-visible:ring-0" key={`${field}${i}`} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
+            <div>
+              <p className="font-semibold mx-auto underline text-center">Resident Information</p>
+              <div className="overflow-x-auto">
+                <Table className="min-w-full border">
+                  <TableHeader>
+                    <TableRow>
+                      {TABLE_FIELDS.map((field, i) => (
+                        <TableHead key={i} className="font-semibold p-4 border">
+                          {field}
+                        </TableHead>
                       ))}
-                    </div>
-                  </div>
-                ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {[1, 2, 3, 4, 5, 6].map((rowIndex) => (
+                      <TableRow key={rowIndex} className="border">
+                        {TABLE_FIELDS.map((field, colIndex) => (
+                          <TableCell key={colIndex} className="p-2 border">
+                            {field !== "Full Time Student?" ? (
+                              <Input
+                                className="border border-none rounded-none outline-none focus-visible:ring-0 w-full"
+                                ref={(el) => (formRefs.current[`${field}${rowIndex}`] = el)}
+                              />
+                            ) : (
+                              <Checkbox className="m-2"/>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </div>
 
