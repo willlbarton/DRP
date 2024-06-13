@@ -1,13 +1,42 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+
 
 const HelpPage = () => {
+  const server = "http://localhost:5000";
+  const connectionSettings = {
+   "force new connection": true,
+   reconnectionAttempts: Infinity,
+   timeout: 10000,
+   transports: ["websocket"],
+  };
   const [selectedTime, setSelectedTime] = useState("");
+  const [getAvailability, setAvailability] = useState(new Map()); // map from e.g. "9:00" to boolean.
+  const socket = io(server, connectionSettings); // server connection
+  useEffect(() => {
+    // Event listener for successful connection
+    socket.on("connect", () => {
+     console.log("Connected to socket.io server!");
+    });
+    // Update button availability on new info from server.
+    socket.on("servedAvailabilityChange", (newAvailability: Map<String, Boolean>) => {
+      setAvailability(newAvailability);
+      console.log("Availabilities updated on client.");
+     });
+    socket.emit("requestAvailability", null);
+  });
 
   const updateTime = (event: any) => {
     const t = event.target.getAttribute("data-time");
-    console.log("PRESSED!" + t);
+    console.log("PRESSED! " + t);
     setSelectedTime(t);
+  }
+  const isAvailable = (time : String) => {
+    if (!getAvailability.has(time)) {
+      return true;
+    }
+    return getAvailability.get(time);
   }
 
   // assume 9am to 5pm, 15-minute intervals.
@@ -30,6 +59,7 @@ const HelpPage = () => {
                 onClick={updateTime}
                 data-time={slot.time}
                 className="p-2 border border-none text-center w-full"
+                style={{color: isAvailable(slot.time) ? "green" : "red"}}
               >
                 {slot.display}
               </Button>
