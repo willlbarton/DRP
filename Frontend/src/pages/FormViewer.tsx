@@ -25,6 +25,7 @@ const FormViewer = () => {
   const fieldUpdatePromises = fields.map(async field => {
     if (field.constructor.name === 'PDFTextField2') {
       const name = field.getName();
+      const refNum = docSnap.data()?.["Council Tax Reference Number"];
       let dst = '';
       switch (name) {
         case 'Name':
@@ -109,15 +110,38 @@ const FormViewer = () => {
         case 'Name and address of landlord':
           const lname = docSnap.data()?.["Name of Landlord/Letting Agent"];
           const address = docSnap.data()?.["Address of Landlord/Letting Agent"];
-          form.getTextField(name).setText(`${lname}\n${address}`);
-        
+          form.getTextField('Name and address of landlord').setText(`${lname} / ${address}`);
+          break;
+        case 'Council tax account ref':
+          form.getTextField(name).setText(refNum[0]);
+          break;
+        case 'Council tax account ref1':
+          form.getTextField(name).setText(refNum[1]);
+          break;
+        case 'Council tax account ref2':
+          form.getTextField(name).setText(refNum[2]);
+          break;
+        case 'Council tax account ref3':
+          form.getTextField(name).setText(refNum[3]);
+          break;
+        case 'Council tax account ref4':
+          form.getTextField(name).setText(refNum[4]);
+          break;
+        case 'Council tax account ref5':
+          form.getTextField(name).setText(refNum[5]);
+          break;
+        case 'Council tax account ref6':
+          form.getTextField(name).setText(refNum[6]);
+          break;
+        case 'Council tax account ref7':
+          form.getTextField(name).setText(refNum[7]);
+          break;
       }
 
       if (!form.getTextField(name).getText()) {
         const val = docSnap.data()?.[dst];
         form.getTextField(name).setText(val || '');
       }
-      
 
       console.log(`${name}: ${form.getTextField(name).getText()}`);
     } else if (field.constructor.name === 'PDFRadioGroup2') {
