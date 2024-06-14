@@ -1,4 +1,5 @@
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import HammersmithForm from "./pages/HammersmithForm";
 import Register from "./pages/Register";
@@ -20,6 +21,7 @@ const App = () => {
         </Route>
       </Routes>
       <SpeedInsights />
+      <Analytics />
     </>
   );
 };
