@@ -47,7 +47,7 @@ const TABLE_FIELDS = [
 ];
 
 type FormRefs = {
-  [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+  [key: string]: HTMLInputElement | HTMLButtonElement | null;
 };
 
 function validateProofOfStudy
@@ -210,7 +210,7 @@ const HammersmithForm: React.FC = () => {
                               />
                             ) : (
                               <div className="flex justify-center">
-                                <Checkbox className="m-2"/>
+                                <Checkbox ref={(el) => formRefs.current[field] = el} className="m-2"/>
                               </div>
                             )}
                           </TableCell>

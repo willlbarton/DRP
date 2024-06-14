@@ -22,12 +22,10 @@ const FormViewer = () => {
   const docRef = doc(db, 'users', userId);
   const docSnap = await getDoc(docRef);
 
-  // A list of promises for each field update
   const fieldUpdatePromises = fields.map(async field => {
     if (field.constructor.name === 'PDFTextField2') {
       const name = field.getName();
       let dst = '';
-      
       switch (name) {
         case 'Name':
           dst = 'Name';
@@ -104,7 +102,6 @@ const FormViewer = () => {
     }
   });
 
-  // Wait for all field updates to complete
   await Promise.all(fieldUpdatePromises);
 
   const pdfBytes = await pdfDoc.save();
@@ -114,10 +111,6 @@ const FormViewer = () => {
   setPdfBlob(blob);
   console.log(pdfUrl);
 }
-
-  const download = async () => {
-    fillPdf();
-  }
 
   const listFormFields = async () => {
     const existingPdfBytes = await fetch('@/public/form.pdf').then(res => res.arrayBuffer());
@@ -132,7 +125,7 @@ const FormViewer = () => {
     });
   };
   
-  //listFormFields();
+  listFormFields();
 
   return (
     <div className="flex flex-col w-screen">
