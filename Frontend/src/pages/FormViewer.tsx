@@ -30,6 +30,9 @@ const FormViewer = () => {
         case 'Name':
           dst = 'Name';
           break;
+        case 'knowledge and belief':
+          dst = 'Name'
+          break;
         case 'Address':
           dst = 'Home Address';
           break;
@@ -93,10 +96,23 @@ const FormViewer = () => {
         case '2-6':
           dst = 'Date of Birth6';
           break;
+        case 'Date':
+          const date = new Date();
+          form.getTextField(name).setText(date.toLocaleDateString());
+          break;
+        case 'Email':
+          dst = 'Email';
+          break;
+        case 'Tel no':
+          dst = 'Telephone Number';
+          break;
       }
-
-      const val = docSnap.data()?.[dst];
-      form.getTextField(name).setText(val || '');
+      
+      if (!form.getTextField(name).getText()) {
+        const val = docSnap.data()?.[dst];
+        form.getTextField(name).setText(val || '');
+      }
+      
 
       console.log(`${name}: ${form.getTextField(name).getText()}`);
     } else if (field.constructor.name === 'PDFRadioGroup2') {
@@ -125,7 +141,12 @@ const FormViewer = () => {
       const val = docSnap.data()?.[dst];
       const radio = form.getRadioGroup(name);
       const options = radio.getOptions();
-      (val as boolean) ? radio.select(options[0]) : radio.select(options[1])
+      if (val as boolean) {
+        radio.disableRequired()
+        radio.clear()
+        radio.select('Choice1')
+        radio.enableRequired()
+      } else radio.select(options[1])
     }
   });
 
