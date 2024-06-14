@@ -26,15 +26,11 @@ const HelpPage = () => {
     // Update button availability on new info from server.
     socket.on("servedAvailability", (serialData) => {
       console.log("Served availability... " + serialData);
-      const entries = Object.entries(JSON.parse(serialData));
+      const entries = JSON.parse(serialData); // an array of [key, value] pairs.
       const newAvailability : Map<string, boolean> = new Map(entries) as Map<string, boolean>;
-      console.log("Deserialized to: " + newAvailability);
-      if (newAvailability == undefined) {
-        console.log("Undefined availability served.");
-      } else {
-        setAvailability(newAvailability);
-        console.log("Availabilities updated on client.");
-      }
+      console.log("Deserialized: " + newAvailability);
+      setAvailability(newAvailability);
+      console.log("Availabilities updated on client.");
      });
      // connecting automatically requests availability.
      // cleanup socket once connection ends.
@@ -49,11 +45,18 @@ const HelpPage = () => {
     setSelectedTime(t);
   }
   const isAvailable = (time : string) => {
-    console.log("isAvailable Check:");
     if (!(getAvailability.has(time))) {
       return true;
     }
     return getAvailability.get(time);
+  }
+
+  const bookTime = (e: any) => {
+    console.log("Booking pressed!");
+    if (getAvailability.has(selectedTime) && isAvailable(selectedTime)) {
+      socket.emit("book", selectedTime);
+      console.log("Booking sent to server after clientside checks.");
+    }
   }
 
   // assume 9am to 5pm, 15-minute intervals.
@@ -82,6 +85,9 @@ const HelpPage = () => {
               </Button>
             ))}
           </div>
+          <Button key="submit"
+            variant = "ghost"
+            onClick = {bookTime}>Book!</Button>
         </div>
       </div>
     </>

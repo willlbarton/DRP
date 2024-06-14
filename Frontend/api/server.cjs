@@ -17,6 +17,7 @@ const io = new Server(httpServer, {
   allowedHeaders: ["Access-Control-Allow-Origin"],
   credentials: true,
  },
+
 });
 
 const times = [9,10,11,12,13,14,15,16,17].flatMap((hour) => [
@@ -26,7 +27,21 @@ const times = [9,10,11,12,13,14,15,16,17].flatMap((hour) => [
     { time: `${hour}:45`, display: `${hour}:45` }
 ]);
 // for now, do not load availabilities from database.
-let availability = new Map(times.map((time) => [time.time, false]));
+let availability = new Map(times.map((time) => [time.time, true]));
+// PRE: availability.has(time);
+const updateAvailability = (time, value) => {
+    if (!availability.has(time)) {
+        console.log("ERROR! cannot book for " + time);
+        return;
+    }
+    availability.set(time, value);
+    // Update availability for clients in realtime.
+    const serialized = JSON.stringify(Array.from(availability)); // send as JSON across network.
+    console.log("Broadcasting: " + serialized);
+    connections.forEach((socket) => {
+        socket.emit("servedAvailability", serialized);
+    });
+};
 // handle new connections
 let connections = [];
 io.on('connect', (socket) => {
@@ -36,11 +51,17 @@ io.on('connect', (socket) => {
     const serialized = JSON.stringify(Array.from(availability)); // send as JSON across network.
     console.log("Serving: " + serialized);
     socket.emit("servedAvailability", serialized);
-
     // Handle all signals received from client below (e.g. socket.on(...))
-
+    socket.on ("book", (time) => 
+    {
+        console.log("Booking received for time " + time);
+        if (availability.has(time) && availability.get(time)) {
+            updateAvailability(time, false);            
+        }
+    });
     // probably ought to handle disconnects too.
 });
+
 
 httpServer.listen(PORT, () => {
  console.log(`Server is listening on port ${PORT}`);
