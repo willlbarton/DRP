@@ -43,7 +43,7 @@ const TABLE_FIELDS = [
   "Name",
   "Date Moved In",
   "Date of Birth",
-  "Full Time Student?",
+  "Full Time Student?"
 ];
 
 type FormRefs = {
@@ -161,7 +161,6 @@ const HammersmithForm: React.FC = () => {
         <CardTitle>
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
-        <p style={{color:TURQUOISE}}><b>TIP</b>: hover over the <Button variant="ghost" className="ml-2">i</Button> if confused.</p>
         <CardContent className="mt-8">
           <form id="hammersmithform" className="gap-8 flex flex-col" onSubmit={onSubmit}>
           {FIELDS1.map((field, i) => (
@@ -210,7 +209,9 @@ const HammersmithForm: React.FC = () => {
                                 ref={(el) => (formRefs.current[`${field}${rowIndex}`] = el)}
                               />
                             ) : (
-                              <Checkbox className="m-2"/>
+                              <div className="flex justify-center">
+                                <Checkbox className="m-2 size-4"/>
+                              </div>
                             )}
                           </TableCell>
                         ))}
