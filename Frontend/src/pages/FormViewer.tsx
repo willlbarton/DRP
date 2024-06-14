@@ -106,8 +106,13 @@ const FormViewer = () => {
         case 'Tel no':
           dst = 'Telephone Number';
           break;
+        case 'Name and address of landlord':
+          const lname = docSnap.data()?.["Name of Landlord/Letting Agent"];
+          const address = docSnap.data()?.["Address of Landlord/Letting Agent"];
+          form.getTextField(name).setText(`${lname}\n${address}`);
+        
       }
-      
+
       if (!form.getTextField(name).getText()) {
         const val = docSnap.data()?.[dst];
         form.getTextField(name).setText(val || '');
