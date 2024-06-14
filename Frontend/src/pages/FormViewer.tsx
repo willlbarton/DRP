@@ -123,7 +123,6 @@ const FormViewer = () => {
           break
       }
       const val = docSnap.data()?.[dst];
-      console.log("oogabooga",val)
       const radio = form.getRadioGroup(name);
       const options = radio.getOptions();
       (val as boolean) ? radio.select(options[0]) : radio.select(options[1])
