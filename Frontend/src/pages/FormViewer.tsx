@@ -42,58 +42,58 @@ const FormViewer = () => {
           dst = 'Property Address';
           break;
         case 'Names of all residents':
-          dst = 'Name0';
-          break;
-        case 'Names of all residents1':
           dst = 'Name1';
           break;
-        case 'Names of all residents2':
+        case 'Names of all residents1':
           dst = 'Name2';
           break;
-        case 'Names of all residents3':
+        case 'Names of all residents2':
           dst = 'Name3';
           break;
-        case 'Names of all residents4':
+        case 'Names of all residents3':
           dst = 'Name4';
           break;
-        case 'Names of all residents5':
+        case 'Names of all residents4':
           dst = 'Name5';
           break;
-        case 'date moved in 2':
-          dst = 'Date Moved In0';
+        case 'Names of all residents5':
+          dst = 'Name6';
           break;
-        case '1':
+        case 'date moved in 2':
           dst = 'Date Moved In1';
           break;
-        case '2':
+        case '1':
           dst = 'Date Moved In2';
           break;
-        case '1_3':
+        case '2':
           dst = 'Date Moved In3';
           break;
-        case '2_3':
+        case '1_3':
           dst = 'Date Moved In4';
           break;
-        case '2-5':
+        case '2_3':
           dst = 'Date Moved In5';
           break;
-        case 'date of birth 2':
-          dst = 'Date of Birth0';
+        case '2-5':
+          dst = 'Date Moved In6';
           break;
-        case '1_2':
+        case 'date of birth 2':
           dst = 'Date of Birth1';
           break;
-        case '2_2':
+        case '1_2':
           dst = 'Date of Birth2';
           break;
-        case '1_4':
+        case '2_2':
           dst = 'Date of Birth3';
           break;
-        case '2_4':
+        case '1_4':
           dst = 'Date of Birth4';
           break;
-        case '2-6':
+        case '2_4':
           dst = 'Date of Birth5';
+          break;
+        case '2-6':
+          dst = 'Date of Birth6';
           break;
       }
 

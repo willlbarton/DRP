@@ -210,7 +210,7 @@ const HammersmithForm: React.FC = () => {
                               />
                             ) : (
                               <div className="flex justify-center">
-                                <Checkbox className="m-2 size-4"/>
+                                <Checkbox className="m-2"/>
                               </div>
                             )}
                           </TableCell>
