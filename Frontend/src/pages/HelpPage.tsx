@@ -19,13 +19,29 @@ const HelpPage = () => {
     socket.on("connect", () => {
      console.log("Connected to socket.io server!");
     });
+
+    socket.on("testing",(x : string) => {
+      console.log("Received: " + x);
+    });
     // Update button availability on new info from server.
-    socket.on("servedAvailability", (newAvailability: Map<string, boolean>) => {
-      setAvailability(newAvailability);
-      console.log("Availabilities updated on client.");
+    socket.on("servedAvailability", (serialData) => {
+      console.log("Served availability... " + serialData);
+      const entries = Object.entries(JSON.parse(serialData));
+      const newAvailability : Map<string, boolean> = new Map(entries) as Map<string, boolean>;
+      console.log("Deserialized to: " + newAvailability);
+      if (newAvailability == undefined) {
+        console.log("Undefined availability served.");
+      } else {
+        setAvailability(newAvailability);
+        console.log("Availabilities updated on client.");
+      }
      });
      // connecting automatically requests availability.
-  });
+     // cleanup socket once connection ends.
+     return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   const updateTime = (event: any) => {
     const t = event.target.getAttribute("data-time");
@@ -33,8 +49,8 @@ const HelpPage = () => {
     setSelectedTime(t);
   }
   const isAvailable = (time : string) => {
-    console.log("availability: " + getAvailability);
-    if (!getAvailability.has(time)) {
+    console.log("isAvailable Check:");
+    if (!(getAvailability.has(time))) {
       return true;
     }
     return getAvailability.get(time);
