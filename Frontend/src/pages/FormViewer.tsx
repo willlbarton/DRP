@@ -99,6 +99,34 @@ const FormViewer = () => {
       form.getTextField(name).setText(val || '');
 
       console.log(`${name}: ${form.getTextField(name).getText()}`);
+    } else if (field.constructor.name === 'PDFRadioGroup2') {
+      const name = field.getName()
+      var dst = ""
+      switch (name) {
+        case "yes or no":
+          dst = "Full Time Student?1"
+          break
+        case "yes or no 2":
+          dst = "Full Time Student?2"
+          break
+        case "yes or no 3":
+          dst = "Full Time Student?3"
+          break
+        case "yes or no 4":
+          dst = "Full Time Student?4"
+          break
+        case "yes or no 5":
+          dst = "Full Time Student?5"
+          break
+        case "yes or no 6":
+          dst = "Full Time Student?6"
+          break
+      }
+      const val = docSnap.data()?.[dst];
+      console.log("oogabooga",val)
+      const radio = form.getRadioGroup(name);
+      const options = radio.getOptions();
+      (val as boolean) ? radio.select(options[0]) : radio.select(options[1])
     }
   });
 
