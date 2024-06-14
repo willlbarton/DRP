@@ -137,15 +137,24 @@ const HammersmithForm: React.FC = () => {
     e.preventDefault();
     const userId = currentUser?.uid || 'defaultUID';
     const docRef = doc(db, 'users', userId);
-    const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
+    const values: { [key: string]: string | boolean } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
-        const val = (ref as HTMLInputElement).type === "checkbox" ? (ref as HTMLInputElement).checked.toString() : ref.value;
-        acc[key] = val;
-        setDoc(docRef, { [key]: val }, { merge: true })
+        if(ref.type == "button") {
+          console.log(ref.attributes)
+        }
+        if ((ref as HTMLElement).getAttribute('aria-checked') !== null) {
+          const isChecked = (ref as HTMLInputElement).getAttribute('aria-checked') === 'true';
+          acc[key] = isChecked
+          console.log(isChecked)
+        } else {
+          const val = (ref as HTMLInputElement).value;
+          acc[key] = val;
+        }
+        setDoc(docRef, { [key]: acc[key] }, { merge: true });
       }
-      return acc;
-    }, {} as { [key: string]: string });
+      return acc
+    }, {} as { [key: string]: string | boolean });
     navigate("/form-viewer");
   };
 
@@ -210,7 +219,7 @@ const HammersmithForm: React.FC = () => {
                               />
                             ) : (
                               <div className="flex justify-center">
-                                <Checkbox ref={(el) => formRefs.current[field] = el} className="m-2"/>
+                                <Checkbox ref={(el) => formRefs.current[`${field}${rowIndex}`] = el} className="m-2"/>
                               </div>
                             )}
                           </TableCell>
