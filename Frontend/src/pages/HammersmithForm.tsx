@@ -17,6 +17,7 @@ import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
 import { PDFDocument } from 'pdf-lib';
 import { Info } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 
 const LIGHT_GREEN = "#05e82e";
 const LIGHT_RED = "#ed3261";
@@ -42,11 +43,11 @@ const TABLE_FIELDS = [
   "Name",
   "Date Moved In",
   "Date of Birth",
-  "Full Time Student? (Y/N)",
+  "Full Time Student?"
 ];
 
 type FormRefs = {
-  [key: string]: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+  [key: string]: HTMLInputElement | HTMLButtonElement | null;
 };
 
 function validateProofOfStudy
@@ -106,12 +107,8 @@ const HammersmithForm: React.FC = () => {
   const formRefs = useRef<FormRefs>({});
 
   const handleFieldChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Handling field change.");
     if (i == 2) {
-      console.log("Postcode was " + postcode);
-      // Postcode updated.
       setPostcode(e.target.value);
-      console.log("Postcode updated to " + postcode);
       validateProofOfStudy(proofOfStudyFileText, setProofMessage, setProofMessageBackgroundColor, postcode);
     }
   }
@@ -140,15 +137,24 @@ const HammersmithForm: React.FC = () => {
     e.preventDefault();
     const userId = currentUser?.uid || 'defaultUID';
     const docRef = doc(db, 'users', userId);
-    const values: { [key: string]: string } = Object.keys(formRefs.current).reduce((acc, key) => {
+    const values: { [key: string]: string | boolean } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
-        const val = (ref as HTMLInputElement).type === "checkbox" ? (ref as HTMLInputElement).checked.toString() : ref.value;
-        acc[key] = val;
-        setDoc(docRef, { [key]: val }, { merge: true })
+        if(ref.type == "button") {
+          console.log(ref.attributes)
+        }
+        if ((ref as HTMLElement).getAttribute('aria-checked') !== null) {
+          const isChecked = (ref as HTMLInputElement).getAttribute('aria-checked') === 'true';
+          acc[key] = isChecked
+          console.log(isChecked)
+        } else {
+          const val = (ref as HTMLInputElement).value;
+          acc[key] = val;
+        }
+        setDoc(docRef, { [key]: acc[key] }, { merge: true });
       }
-      return acc;
-    }, {} as { [key: string]: string });
+      return acc
+    }, {} as { [key: string]: string | boolean });
     navigate("/form-viewer");
   };
 
@@ -164,7 +170,6 @@ const HammersmithForm: React.FC = () => {
         <CardTitle>
           Hammersmith and Fulham Council Tax Exemption Form
         </CardTitle>
-        <p style={{color:TURQUOISE}}><b>TIP</b>: hover over the <Button variant="ghost" className="ml-2">i</Button> if confused.</p>
         <CardContent className="mt-8">
           <form id="hammersmithform" className="gap-8 flex flex-col" onSubmit={onSubmit}>
           {FIELDS1.map((field, i) => (
@@ -186,25 +191,61 @@ const HammersmithForm: React.FC = () => {
                   </HoverCardContent>
                 </HoverCard>
               ) : null}
-              <Input id={field} onChange={(e) => handleFieldChange(i, e)} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
+              {i === 3 ? (
+                <Input
+                  id={field}
+                  onChange={(e) => handleFieldChange(i, e)}
+                  placeholder={field}
+                  ref={(el) => (formRefs.current[field] = el)}
+                  pattern="\d{8}"
+                  maxLength={8}
+                  required
+                />
+              ) : (
+                <Input
+                  id={field}
+                  onChange={(e) => handleFieldChange(i, e)}
+                  placeholder={field}
+                  ref={(el) => (formRefs.current[field] = el)}
+                  required
+                />
+              )}
             </div>
           ))}
-
-            <div className="">
-              <p className = "font-semibold mx-auto underline text-center">Resident Information</p>
-              <div  className="flex overflow-x-auto">
-                {TABLE_FIELDS.map((field, i) => (
-                  <div key={i}>
-                    <div className="text-nowrap font-semibold overflow-x-auto p-4 border">
-                      {field}
-                    </div>
-                    <div>
-                      {[1, 2, 3, 4, 5, 6].map((_, i) => (
-                        <Input className="border rounded-none outline-none focus-visible:ring-0" key={`${field}${i}`} ref={(el) => (formRefs.current[`${field}${i}`] = el)}/>
+            <div>
+              <p className="font-semibold mx-auto underline text-center">Resident Information</p>
+              <div className="overflow-x-auto">
+                <Table className="min-w-full border">
+                  <TableHeader>
+                    <TableRow>
+                      {TABLE_FIELDS.map((field, i) => (
+                        <TableHead key={i} className="font-semibold p-4 border">
+                          {field}
+                        </TableHead>
                       ))}
-                    </div>
-                  </div>
-                ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {[1, 2, 3, 4, 5, 6].map((rowIndex) => (
+                      <TableRow key={rowIndex} className="border">
+                        {TABLE_FIELDS.map((field, colIndex) => (
+                          <TableCell key={colIndex} className="p-2 border">
+                            {field !== "Full Time Student?" ? (
+                              <Input
+                                className="border border-none rounded-none outline-none focus-visible:ring-0 w-full"
+                                ref={(el) => (formRefs.current[`${field}${rowIndex}`] = el)}
+                              />
+                            ) : (
+                              <div className="flex justify-center">
+                                <Checkbox ref={(el) => formRefs.current[`${field}${rowIndex}`] = el} className="m-2"/>
+                              </div>
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </div>
 
