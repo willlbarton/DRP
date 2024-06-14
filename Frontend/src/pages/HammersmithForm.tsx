@@ -191,7 +191,25 @@ const HammersmithForm: React.FC = () => {
                   </HoverCardContent>
                 </HoverCard>
               ) : null}
-              <Input id={field} onChange={(e) => handleFieldChange(i, e)} placeholder={field} ref={(el) => (formRefs.current[field] = el)} required />
+              {i === 3 ? (
+                <Input
+                  id={field}
+                  onChange={(e) => handleFieldChange(i, e)}
+                  placeholder={field}
+                  ref={(el) => (formRefs.current[field] = el)}
+                  pattern="\d{8}"
+                  maxLength={8}
+                  required
+                />
+              ) : (
+                <Input
+                  id={field}
+                  onChange={(e) => handleFieldChange(i, e)}
+                  placeholder={field}
+                  ref={(el) => (formRefs.current[field] = el)}
+                  required
+                />
+              )}
             </div>
           ))}
             <div>
