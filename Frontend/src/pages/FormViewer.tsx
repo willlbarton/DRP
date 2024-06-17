@@ -12,8 +12,7 @@ const FormViewer = () => {
   const { currentUser } = useAuth();
 
   const fillPdf = async () => {
-  const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
-  console.log("CD: ",__dirname)
+  const existingPdfBytes = await fetch('public/form.pdf').then(res => res.arrayBuffer());
   console.log("Bytes: ", existingPdfBytes)
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
