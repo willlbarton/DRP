@@ -13,6 +13,8 @@ const FormViewer = () => {
 
   const fillPdf = async () => {
   const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
+  console.log("CD: ",__dirname)
+  console.log("Bytes: ", existingPdfBytes)
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
   const fields = form.getFields();
