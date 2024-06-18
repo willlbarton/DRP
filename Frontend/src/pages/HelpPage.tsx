@@ -68,6 +68,7 @@ const HelpPage = () => {
               data-time={slot.time}
               className="p-2 border border-none text-center w-full"
               style={{ color: isAvailable(slot.time) ? "green" : "red" }}
+              disabled={!isAvailable(slot.time)}
             >
               {slot.display}
             </Button>
