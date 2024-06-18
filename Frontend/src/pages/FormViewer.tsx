@@ -12,7 +12,7 @@ const FormViewer = () => {
   const { currentUser } = useAuth();
 
   const fillPdf = async () => {
-  const existingPdfBytes = await fetch('form.pdf').then(res => res.arrayBuffer());
+  const existingPdfBytes = await fetch('/form.pdf').then(res => res.arrayBuffer());
   console.log("Bytes: ", existingPdfBytes)
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const form = pdfDoc.getForm();
@@ -25,6 +25,7 @@ const FormViewer = () => {
 
   const fieldUpdatePromises = fields.map(async field => {
     if (field.constructor.name === 'PDFTextField2') {
+      console.log("text field")
       const name = field.getName();
       const refNum = docSnap.data()?.["Council Tax Reference Number"];
       let dst = '';
@@ -146,6 +147,7 @@ const FormViewer = () => {
 
       console.log(`${name}: ${form.getTextField(name).getText()}`);
     } else if (field.constructor.name === 'PDFRadioGroup2') {
+      console.log("radio group")
       const name = field.getName()
       var dst = ""
       switch (name) {
