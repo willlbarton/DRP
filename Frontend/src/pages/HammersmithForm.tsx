@@ -15,7 +15,6 @@ import { db, storage } from "../firebase/firebase.ts";
 import { ref, uploadBytes } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import pdfToText from 'react-pdftotext'
-import { PDFDocument } from 'pdf-lib';
 import { Info } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.tsx";
 
@@ -62,17 +61,14 @@ function validateProofOfStudy
     if (pdfText.includes("transcript")) {
       setProofMessage("You uploaded a Transcript, not a Statement of Registration");
       setColor(LIGHT_RED);
-      console.log("!Warning!: You uploaded a Transcript, not a Statement of Registration.");
     }
     else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
       setProofMessage("This Imperial College London document is not a Statement of Registration");
       setColor(LIGHT_RED)
-      console.log("!Warning!: this Imperial College document is not a Statement of Registration");
     } else {
       // Check names and postcode matches.
       if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
         // This is probably correct, but we could have warnings.
-        console.log ("found postcode " + postcode + " in file.");
         if (!pdfText.includes("registration")) {
           setProofMessage("Hmm... This doesn't look like a registration document.")
           setColor(LIGHT_ORANGE);
@@ -83,7 +79,6 @@ function validateProofOfStudy
       } else {
         setProofMessage("Your proof of study should contain your Postcode: " + postcode);
         setColor(LIGHT_RED)
-        console.log("!Warning!: proof of study does not contain postcode.");
       }
     }
   }
@@ -100,9 +95,6 @@ const HammersmithForm: React.FC = () => {
   
   const {currentUser} = useAuth()
   
-  
-  console.log(currentUser?.uid)
-  
   const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
 
@@ -116,9 +108,7 @@ const HammersmithForm: React.FC = () => {
   const onStudyProofUpload = (event:any) => {
     const file = event.target.files[0];
     const storageRef = ref(storage, `proofOfStudy/${currentUser?.uid}/${file.name}`);
-    uploadBytes(storageRef, file).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
-    });
+    uploadBytes(storageRef, file)
     pdfToText(file)
         .then(text => {
           setProofOfStudyFileText(text);
@@ -140,13 +130,9 @@ const HammersmithForm: React.FC = () => {
     const values: { [key: string]: string | boolean } = Object.keys(formRefs.current).reduce((acc, key) => {
       const ref = formRefs.current[key];
       if (ref) {
-        if(ref.type == "button") {
-          console.log(ref.attributes)
-        }
         if ((ref as HTMLElement).getAttribute('aria-checked') !== null) {
           const isChecked = (ref as HTMLInputElement).getAttribute('aria-checked') === 'true';
           acc[key] = isChecked
-          console.log(isChecked)
         } else {
           const val = (ref as HTMLInputElement).value;
           acc[key] = val;

@@ -42,6 +42,7 @@ const HelpPage = () => {
           newAvailability.set(selectedTime, false);
           return newAvailability;
         });
+        setSelectedTime("");
       } catch (error) {
         console.error("Error booking time slot:", error);
       }

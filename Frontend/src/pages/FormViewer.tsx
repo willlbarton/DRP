@@ -187,7 +187,6 @@ const FormViewer = () => {
   const url = URL.createObjectURL(blob);
   setPdfUrl(url);
   setPdfBlob(blob);
-  console.log(pdfUrl);
 }
 
   const listFormFields = async () => {
