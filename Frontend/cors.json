@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["https://drp-pearl.vercel.app"],
+      "origin": ["http://localhost:5180", "https://drp-pearl.vercel.app"],
       "method": ["GET", "POST", "PUT"],
       "maxAgeSeconds": 3600,
       "responseHeader": ["Content-Type", "Authorization"]
