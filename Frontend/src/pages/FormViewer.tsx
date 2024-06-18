@@ -192,7 +192,7 @@ const FormViewer = () => {
 }
 
   const listFormFields = async () => {
-    const existingPdfBytes = await fetch('@/public/form.pdf').then(res => res.arrayBuffer());
+    const existingPdfBytes = await fetch('/form.pdf').then(res => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const form = pdfDoc.getForm();
     const fields = form.getFields();
