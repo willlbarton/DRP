@@ -203,10 +203,9 @@ const FormViewer = () => {
           const radio = form.getRadioGroup(fieldName);
           const options = radio.getOptions();
           if (value) {
-            radio.disableRequired();
-            radio.clear();
-            radio.select('Choice1');
-            radio.enableRequired();
+            if (radio.getSelected() !== "Choice1") {
+              radio.select(options[0]);
+            } 
           } else {
             radio.select(options[1]);
           }
