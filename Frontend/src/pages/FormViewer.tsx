@@ -13,28 +13,28 @@ const FormViewer = () => {
   const [pdfBlob, setPdfBlob] = useState<Blob | undefined>();
   const { currentUser } = useAuth();
 
-  useEffect(() => {
-    const fetchPdfUrl = async () => {
-      try {
-        const pdfRef = ref(storage, 'form.pdf');
-        const url = await getDownloadURL(pdfRef);
-        setPdfUrl(url);
-      } catch (error) {
-        console.error('Error fetching PDF URL:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPdfUrl = async () => {
+  //     try {
+  //       const pdfRef = ref(storage, 'form.pdf');
+  //       const url = await getDownloadURL("/form.pdf");
+  //       setPdfUrl(url);
+  //     } catch (error) {
+  //       console.error('Error fetching PDF URL:', error);
+  //     }
+  //   };
 
-    fetchPdfUrl();
-  }, []);
+  //   fetchPdfUrl();
+  // }, []);
 
   const fillPdf = async () => {
-    try {
-      if (!pdfUrl) {
-        console.error('PDF URL not available');
-        return;
-      }
+    // try {
+    //   if (!pdfUrl) {
+    //     console.error('PDF URL not available');
+    //     return;
+    //   }
 
-      const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
+      const existingPdfBytes = await fetch("/form.pdf").then(res => res.arrayBuffer());
       console.log("Bytes: ", existingPdfBytes);
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       const form = pdfDoc.getForm();
@@ -222,9 +222,6 @@ const FormViewer = () => {
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
       setPdfBlob(blob);
-    } catch (error) {
-      console.error('Error filling PDF:', error);
-    }
   };
 
   const listFormFields = async () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContexts"
 import { doCreateUserWithEmailAndPassword } from "../firebase/auth";
 
@@ -41,7 +41,7 @@ export function Register() {
     if(userLoggedIn) {
       navigate("/")
     }
-  }, [userLoggedIn])
+  }, [navigate, userLoggedIn])
 
   return (
     <div>
