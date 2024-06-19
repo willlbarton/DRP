@@ -49,59 +49,56 @@ type FormRefs = {
   [key: string]: HTMLInputElement | HTMLButtonElement | null;
 };
 
-function validateProofOfStudy
-  (text : string,
-  setProofMessage: ((arg0: string) => void), 
-  setColor: ((arg0: string) => void),
-  postcode : string) {
-  const pdfText = text.toLowerCase();
-  // Only check proof of study if something has been uploaded.
-  if (text != "") {
-    // Check if transcript
-    if (pdfText.includes("transcript")) {
-      setProofMessage("You uploaded a Transcript, not a Statement of Registration");
-      setColor(LIGHT_RED);
-    }
-    else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
-      setProofMessage("This Imperial College London document is not a Statement of Registration");
-      setColor(LIGHT_RED)
-    } else {
-      // Check names and postcode matches.
-      if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
-        // This is probably correct, but we could have warnings.
-        if (!pdfText.includes("registration")) {
-          setProofMessage("Hmm... This doesn't look like a registration document.")
-          setColor(LIGHT_ORANGE);
-        } else {
-          setProofMessage("This looks correct!");
-          setColor(LIGHT_GREEN);
-        }
-      } else {
-        setProofMessage("Your proof of study should contain your Postcode: " + postcode);
-        setColor(LIGHT_RED)
-      }
-    }
-  }
-}
-
 const HammersmithForm: React.FC = () => {
   const [proofMessageVisible, setProofMessageVisible] = useState(false);
   const [proofMessage, setProofMessage] = useState("");
   // Initially blue.
   const [proofMessageBackgroundColor, setProofMessageBackgroundColor] = useState(LIGHT_GREEN);
   const [proofOfStudyFileText, setProofOfStudyFileText] = useState("");
-
-  const [postcode, setPostcode] = useState("");
   
   const {currentUser} = useAuth()
   
   const navigate = useNavigate();
   const formRefs = useRef<FormRefs>({});
 
+  const validateProofOfStudy = 
+    (text : string,
+    setProofMessage: ((arg0: string) => void), 
+    setColor: ((arg0: string) => void)) => {
+    const pdfText = text.toLowerCase();
+    const postcode = formRefs.current.Postcode?.value as string;
+    // Only check proof of study if something has been uploaded.
+    if (text != "") {
+      // Check if transcript
+      if (pdfText.includes("transcript")) {
+        setProofMessage("You uploaded a Transcript, not a Statement of Registration");
+        setColor(LIGHT_RED);
+      }
+      else if (pdfText.includes("imperial") && !pdfText.includes("statement of registration")) {
+        setProofMessage("This Imperial College London document is not a Statement of Registration");
+        setColor(LIGHT_RED)
+      } else {
+        // Check names and postcode matches.
+        if (pdfText.replace(" ", "").includes(postcode.toLowerCase().replace(" ",""))) {
+          // This is probably correct, but we could have warnings.
+          if (!pdfText.includes("registration")) {
+            setProofMessage("Hmm... This doesn't look like a registration document.")
+            setColor(LIGHT_ORANGE);
+          } else {
+            setProofMessage("This looks correct!");
+            setColor(LIGHT_GREEN);
+          }
+        } else {
+          setProofMessage("Your proof of study should contain your Postcode: " + postcode);
+          setColor(LIGHT_RED)
+        }
+      }
+    }
+  }
+
   const handleFieldChange = (i: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (i == 2) {
-      setPostcode(e.target.value);
-      validateProofOfStudy(proofOfStudyFileText, setProofMessage, setProofMessageBackgroundColor, postcode);
+      validateProofOfStudy(proofOfStudyFileText, setProofMessage, setProofMessageBackgroundColor);
     }
   }
   
@@ -112,7 +109,7 @@ const HammersmithForm: React.FC = () => {
     pdfToText(file)
         .then(text => {
           setProofOfStudyFileText(text);
-          validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor, postcode);
+          validateProofOfStudy(text, setProofMessage, setProofMessageBackgroundColor);
           })
           .catch(error => {
             setProofMessage("Failed to get text from your file.");

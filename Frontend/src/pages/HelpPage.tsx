@@ -2,10 +2,18 @@ import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { doc, setDoc, onSnapshot, collection } from "firebase/firestore";
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 
 const HelpPage = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [availability, setAvailability] = useState(new Map<string, boolean>());
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "bookings"), (snapshot) => {
@@ -60,6 +68,7 @@ const HelpPage = () => {
     <div className="flex justify-center">
       <div className="flex flex-col items-center">
         <p className="text-lg font-bold mb-4">Selected time: {selectedTime}</p>
+        {/* <Calendar /> */}
         <div className="grid grid-cols-4 gap-4">
           {times.map((slot, index) => (
             <Button
