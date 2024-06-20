@@ -23,28 +23,39 @@ export function Login() {
   const [isSigningIn, setIsSigningIn] = useState(false)
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if(!isSigningIn) {
-      setIsSigningIn(true)
-      await doSignInWithEmailAndPassword(email, password)
-    }
-  }
-
-  const onGoogleSignIn = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!isSigningIn) {
-      setIsSigningIn(true)
-      doSignInWithGoogle().catch((err: Error) => {
-        setIsSigningIn(false)
-      })
+      setIsSigningIn(true);
+      try {
+        await doSignInWithEmailAndPassword(email, password);
+        navigate("/");
+      } catch (error) {
+        console.error("Error logging in:", error);
+        setIsSigningIn(false);
+      }
     }
-  }
+  };
+
+  const onGoogleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      try {
+        await doSignInWithGoogle();
+        navigate("/");
+      } catch (error) {
+        console.error("Error logging in with Google:", error);
+        setIsSigningIn(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    if(userLoggedIn) {
-      navigate("/")
+    if (userLoggedIn) {
+      navigate("/");
     }
-  }, [])
+  }, [userLoggedIn, navigate]);
+
   return (
     <div>
       <Card className="mx-auto max-w-sm p-8 mt-16 self-center w-[90%] max-w-[600px]">
