@@ -16,32 +16,41 @@ const MainLayout = () => {
     <div className="min-h-screen flex flex-col">
       <header className="bg-primary text-white fixed top-0 left-0 right-0 z-50 h-16">
         <nav className="container mx-auto h-full flex items-center justify-between">
-          <ul className="flex w-full justify-evenly text-lg">
-            <li>
-              <Link to="/" className="hover:text-gray-300">
-                Home
-              </Link>
-            </li>          
-            {currentUser ? (
+          {/* Left-aligned Home link */}
+          <div className="flex">
+            <ul className="flex items-center space-x-4">
               <li>
-                <button
-                  onClick={handleSignOut}
-                  className="hover:text-gray-300 focus:outline-none"
-                >
-                  Sign out
-                </button>
+                <Link to="/" className="hover:text-gray-300 text-lg">
+                  Home
+                </Link>
               </li>
-            ) : (
-              <li>
-                <button
-                  onClick={() => navigate('/login')}
-                  className="hover:text-gray-300 focus:outline-none"
-                >
-                  Login
-                </button>
-              </li>
-            )}
-          </ul>
+            </ul>
+          </div>
+          
+          {/* Right-aligned Login/Sign out button */}
+          <div className="flex">
+            <ul className="flex items-center space-x-4">
+              {currentUser ? (
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="hover:text-gray-300 focus:outline-none text-lg"
+                  >
+                    Sign out
+                  </button>
+                </li>
+              ) : (
+                <li>
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="hover:text-gray-300 focus:outline-none text-lg"
+                  >
+                    Login
+                  </button>
+                </li>
+              )}
+            </ul>
+          </div>
         </nav>
       </header>
       <main className="flex-grow container mx-auto p-4 pt-20 flex justify-center">
