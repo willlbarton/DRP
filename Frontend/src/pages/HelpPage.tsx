@@ -84,18 +84,6 @@ const HelpPage = () => {
     { time: `${hour}:45`, display: `${hour}:45` }
   ]);
 
-  const filltoday = () => {
-    const today = format(new Date(), "yyyy-MM-dd");
-    console.log("yassss")
-    times.forEach(async (time) => {
-      const docRef = doc(db, 'bookings', today, 'slots', time.time);
-      await setDoc(docRef, { status: "available" });
-      await setDoc(docRef, { user: currentUser?.uid });
-    });
-  }
-
-  filltoday();
-
   return (
     <div className="flex justify-center">
       <div className="flex flex-col items-center">
