@@ -87,7 +87,7 @@ const HelpPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col gap-4 items-center">
         <Popover>
           <PopoverTrigger asChild>
             <Button
