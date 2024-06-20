@@ -12,18 +12,6 @@ const MainLayout = () => {
     navigate('/login');
   };
 
-  const goToForm = () => {
-    if (currentUser) {
-      navigate("/form");
-    }
-  };
-
-  const goToCallBooking = () => {
-    if (currentUser) {
-      navigate("/book-call");
-    }
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-primary text-white fixed top-0 left-0 right-0 z-50 h-16">
@@ -33,24 +21,7 @@ const MainLayout = () => {
               <Link to="/" className="hover:text-gray-300">
                 Home
               </Link>
-            </li>
-            <li>
-              <button
-                onClick={goToForm}
-                className="hover:text-gray-300 focus:outline-none"
-              >
-                Form
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={goToCallBooking}
-                className="hover:text-gray-300 focus:outline-none"
-              >
-                Book a call
-              </button>
-            </li>
-            
+            </li>          
             {currentUser ? (
               <li>
                 <button

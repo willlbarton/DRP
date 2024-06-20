@@ -69,7 +69,7 @@ const Home = () => {
         <CardTitle className="mx-auto">
           Welcome to CouncilHelper
         </CardTitle>
-        <CardContent className="flex flex-col gap-8 mt-8">
+        <CardContent className="flex flex-col gap-16 mt-8">
           <div className="mx-auto">
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
@@ -121,9 +121,9 @@ const Home = () => {
                 {value} Services
               </h1>
               {value === "Hammersmith and Fulham" && 
-                <Link to="/form"><Button>Council Tax Exemption</Button></Link>
+                <Link to="/form"><Button className="w-full">Council Tax Exemption</Button></Link>
               }
-              <Link to="book-call"><Button>Book Call</Button></Link>
+              <Link to="book-call"><Button className="w-full">Book Call</Button></Link>
             </div>
           }
         </CardContent>
