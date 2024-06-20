@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import React, { useEffect, useState } from 'react';
 import { db } from '@/firebase/firebase';
 import { doc, setDoc, onSnapshot, collection } from "firebase/firestore";
-import { format, set, addHours, addMinutes, isAfter } from "date-fns"
+import { format, addHours, addMinutes, isAfter } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Calendar } from "@/components/ui/calendar"
@@ -12,27 +12,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { useAuth } from '@/contexts/authContexts';
-import { fill } from 'pdf-lib';
 
 
 const HelpPage = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [availability, setAvailability] = useState(new Map<string, boolean>());
-  const [date, setDate] = React.useState<Date>()
+  const [date, setDate] = React.useState<Date>();
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "bookings"), (snapshot) => {
+    if (!date) return
+
+    const slotsCollectionRef = collection(db, 'bookings', format(date, "yyyy-MM-dd"), 'slots');
+    const unsubscribe = onSnapshot(slotsCollectionRef, (snapshot) => {
       const newAvailability = new Map<string, boolean>();
       snapshot.forEach((doc) => {
         const data = doc.data();
-        newAvailability.set(doc.id, (data.status !== "booked") && true);
+        newAvailability.set(doc.id, data.status !== "booked");
+        console.log("data: ", data)
+        console.log("newAvailability: ", data.status !== "booked")
       });
       setAvailability(newAvailability);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [date]);
 
   const updateTime = (event: any) => {
     const t = event.target.getAttribute("data-time");
@@ -41,12 +45,9 @@ const HelpPage = () => {
 
   const isAvailable = (time: string) => {
     const [hours, minutes] = time.split(":").map(Number);
-    console.log("hours: ", hours, "minutes: ", minutes)
     var d = date ? date : new Date();
-    console.log(d)
     d = addHours(d, hours)
     d = addMinutes(d, minutes)
-    console.log(d)
     if (isAfter(d, new Date())) {
       if (!availability.has(time)) {
         return true;
@@ -57,12 +58,12 @@ const HelpPage = () => {
   };
 
   const bookTime = async () => {
-    if (availability.has(selectedTime) && isAvailable(selectedTime)) {
+    if (isAvailable(selectedTime)) {
       try {
         const dat = format(date ? date : new Date(), "yyyy-MM-dd");
-        const docRef = doc(db, 'bookings', dat, selectedTime);
-        await setDoc(docRef, { status: "booked" });
-        await setDoc(docRef, { user: currentUser?.uid });
+        console.log(dat)
+        const docRef = doc(db, "bookings", dat, "slots", selectedTime);
+        await setDoc(docRef, { status: "booked", user: currentUser?.uid }, { merge: true });
         setAvailability(prevAvailability => {
           const newAvailability = new Map(prevAvailability);
           newAvailability.set(selectedTime, false);
